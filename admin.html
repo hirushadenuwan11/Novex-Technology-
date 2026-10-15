@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novex Technology - Admin Panel</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        .login-container { 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://lh3.googleusercontent.com/d/1O2hs_QCyjRALy99kSQtVy-zLNRBIKRWf') no-repeat center center fixed; 
+            background-size: cover;
+            padding: 20px; 
+        }
+        .login-card { 
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); 
+            padding: 40px 30px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+            width: 100%; max-width: 420px; animation: fadeIn 0.8s ease-in-out; 
+        }
+        .admin-header { background: linear-gradient(135deg, #1e1b4b, #312e81); color: white; padding: 20px 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .stat-box { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid #4f46e5; transition: transform 0.3s; }
+        .stat-box:hover { transform: translateY(-5px); }
+        #adminDashboard { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- ADMIN LOGIN PAGE -->
+    <div id="adminLoginPage" class="login-container">
+        <div class="login-card text-center">
+            <div class="mb-4">
+                <div class="mb-3">
+                    <img src="https://lh3.googleusercontent.com/d/1YgrgTrhCQpRQclIiQjhAb_LmvEO2eLXQ" alt="Novex Technology Logo" style="width: 80px; height: 80px; object-fit: contain; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                </div>
+                <h3 class="fw-bold text-dark">Novex Technology</h3>
+                <p class="text-muted small">Admin Control Panel</p>
+            </div>
+            <div class="mb-3 text-start">
+                <label class="form-label text-secondary fw-bold small">Username</label>
+                <input type="text" class="form-control bg-light py-2" id="adminUser" placeholder="Username">
+            </div>
+            <div class="mb-3 text-start">
+                <label class="form-label text-secondary fw-bold small">Password</label>
+                <input type="password" class="form-control bg-light py-2" id="adminPass" placeholder="••••••••">
+            </div>
+            <div id="adminLoginError" class="alert alert-danger py-2 mb-3 small fw-bold" style="display:none;"></div>
+            <button class="btn btn-primary w-100 fw-bold py-2 shadow-sm" style="background: #4f46e5; border: none; border-radius: 12px;" onclick="adminLogin()">Login to Panel</button>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div id="adminDashboard">
+        <div class="admin-header d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="m-0 fw-bold"><i class="fa-solid fa-crown text-warning me-2"></i> Novex Technology Panel</h4>
+                <small class="text-white-50">System Administrator Dashboard</small>
+            </div>
+            <button class="btn btn-sm btn-light text-danger fw-bold rounded-pill px-3 shadow-sm" onclick="adminLogout()"><i class="fa-solid fa-power-off me-1"></i> Logout</button>
+        </div>
+
+        <div class="container pb-5">
+            <!-- Stats Row -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3 col-6"><div class="stat-box"><small class="text-muted fw-bold d-block">මුළු සිසුන්</small><h3 class="m-0 fw-bold text-primary" id="admTotalStudents">0</h3></div></div>
+                <div class="col-md-3 col-6"><div class="stat-box" style="border-left-color: #10b981;"><small class="text-muted fw-bold d-block">අද පැමිණීම</small><h3 class="m-0 fw-bold text-success" id="admTodayAttendance">0</h3></div></div>
+                <div class="col-md-3 col-6"><div class="stat-box" style="border-left-color: #f59e0b;"><small class="text-muted fw-bold d-block">ගුරුවරුන් ගණන</small><h3 class="m-0 fw-bold text-warning" id="admTeachersCount">0</h3></div></div>
+                <div class="col-md-3 col-6"><div class="stat-box" style="border-left-color: #ec4899;"><small class="text-muted fw-bold d-block">මුළු ආදායම</small><h3 class="m-0 fw-bold text-danger" id="admRevenue">Rs. 0</h3></div></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <button class="btn btn-primary fw-bold shadow-sm px-3" style="background: #4f46e5; border-radius: 10px;" onclick="openAddTeacherModal()"><i class="fa-solid fa-user-plus me-2"></i> නව ගුරුවරයෙක්</button>
+                <button class="btn btn-success fw-bold shadow-sm px-3" style="border-radius: 10px;" onclick="openAnnouncementModal()"><i class="fa-solid fa-bullhorn me-2"></i> නිවේදන කළමනාකරණය</button>
+                <button class="btn btn-warning fw-bold shadow-sm px-3 text-dark" style="border-radius: 10px;" onclick="openAddPaymentModal()"><i class="fa-solid fa-hand-holding-dollar me-2"></i> ගෙවීමක් එකතු කරන්න</button>
+                <button class="btn btn-info text-white fw-bold shadow-sm px-3" style="border-radius: 10px;" onclick="openPaymentsModal()"><i class="fa-solid fa-money-bill-wave me-2"></i> ගෙවීම් ඉතිහාසය</button>
+                <button class="btn btn-dark fw-bold shadow-sm px-3" style="border-radius: 10px;" onclick="openLogsModal()"><i class="fa-solid fa-list-check me-2"></i> ලොග්ස්</button>
+            </div>
+
+            <!-- Analytics Graph Section -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                <h5 class="fw-bold mb-3 text-secondary"><i class="fa-solid fa-chart-pie me-2"></i> පද්ධති විශ්ලේෂණ ප්‍රස්ථාරය (Analytics)</h5>
+                <div style="max-height: 250px; display: flex; justify-content: center;">
+                    <canvas id="systemChart" style="max-width: 400px; max-height: 220px;"></canvas>
+                </div>
+            </div>
+
+            <!-- Teachers List Table -->
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white fw-bold py-3"><i class="fa-solid fa-chalkboard-user me-2"></i> ගුරුවරුන්ගේ කළමනාකරණය (Teachers Clients)</div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped text-center align-middle m-0">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>Teacher ID</th>
+                                <th>නම & විෂය</th>
+                                <th>Username / Password</th>
+                                <th>සිසුන්</th>
+                                <th>Expire Date & Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTeachersTableBody"><tr><td colspan="7" class="text-muted py-3">Loading...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+
+    <!-- Add Teacher Modal -->
+    <div class="modal fade" id="addTeacherModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-primary text-white"><h5 class="modal-title fw-bold">නව ගුරුවරයෙක් ලියාපදිංචි කිරීම</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body p-4">
+                    <div class="mb-3"><label class="form-label fw-bold small">ගුරුවරයාගේ නම</label><input type="text" id="addTName" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">විෂය</label><input type="text" id="addTSubj" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Username</label><input type="text" id="addTUser" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Password</label><input type="text" id="addTPass" class="form-control"></div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">දායකත්ව කාලය (Subscription Period)</label>
+                        <select id="addTMonths" class="form-select" onchange="calculateAddAmount()">
+                            <option value="1">1 Month (Rs. 2,500)</option>
+                            <option value="2">2 Months (Rs. 5,000)</option>
+                            <option value="3">3 Months (Rs. 7,500)</option>
+                            <option value="4">4 Months (Rs. 10,000)</option>
+                            <option value="5">5 Months (Rs. 12,500)</option>
+                            <option value="12">1 Year / 12 Months (Rs. 30,000)</option>
+                        </select>
+                        <small class="text-muted fw-bold mt-1 d-block" id="calcAmountText">ගෙවිය යුතු මුදල: Rs. 2,500</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Account Status</label>
+                        <select id="addTStatus" class="form-select">
+                            <option value="Active">Active</option>
+                            <option value="Deactive">Deactive</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary w-100 fw-bold py-2 shadow-sm" onclick="saveNewTeacher()">Save Teacher & Payment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Teacher Modal -->
+    <div class="modal fade" id="editTeacherModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-warning text-dark"><h5 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i> ගුරුවරයාගේ විස්තර වෙනස් කිරීම (Edit)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body p-4">
+                    <input type="hidden" id="editTeacherId">
+                    <div class="mb-3"><label class="form-label fw-bold small">ගුරුවරයාගේ නම</label><input type="text" id="editTName" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Username</label><input type="text" id="editTUser" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Password</label><input type="text" id="editTPass" class="form-control"></div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-8"><label class="form-label fw-bold small">Expire Date</label><input type="date" id="editTExpDate" class="form-control"></div>
+                        <div class="col-4"><label class="form-label fw-bold small">Expire Time</label><input type="time" id="editTExpTime" class="form-control"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Account Status</label>
+                        <select id="editTStatus" class="form-select">
+                            <option value="Active">Active</option>
+                            <option value="Deactive">Deactive</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-warning w-100 fw-bold py-2 shadow-sm text-dark" onclick="saveEditedTeacher()">Update Teacher Details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Payment Modal -->
+    <div class="modal fade" id="addPaymentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-warning text-dark"><h5 class="modal-title fw-bold"><i class="fa-solid fa-hand-holding-dollar me-2"></i> ගෙවීමක් සටහන් කිරීම (Add Payment)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">ගුරුවරයා තෝරන්න</label>
+                        <select id="paymentTeacherSelect" class="form-select"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">මුදල (Rs.)</label>
+                        <input type="number" id="paymentAmount" class="form-control" value="2500" placeholder="2500">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">විස්තරය (Description)</label>
+                        <input type="text" id="paymentDesc" class="form-control" value="Monthly Subscription Renewal" placeholder="උදා: October Payment">
+                    </div>
+                    <button class="btn btn-warning w-100 fw-bold py-2 shadow-sm text-dark" onclick="savePayment()">Save Payment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Announcement Modal with Delete Support -->
+    <div class="modal fade" id="announcementModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-success text-white"><h5 class="modal-title fw-bold"><i class="fa-solid fa-bullhorn me-2"></i> පද්ධති නිවේදන කළමනාකරණය</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">නව නිවේදන පණිවිඩය</label>
+                        <textarea id="announcementText" class="form-control mb-2" rows="3" placeholder="සියලුම ගුරුවරුන් වෙත විශේෂ දැනුම්දීමයි..."></textarea>
+                        <button class="btn btn-success w-100 fw-bold py-2 shadow-sm" onclick="sendAnnouncement()">Send Announcement</button>
+                    </div>
+                    <hr class="my-4">
+                    <h6 class="fw-bold text-secondary mb-3"><i class="fa-solid fa-list me-1"></i> දැනට ඇති නිවේදන (Active Announcements)</h6>
+                    <div class="table-responsive" style="max-height: 250px;">
+                        <table class="table table-bordered table-striped text-center align-middle">
+                            <thead class="table-dark">
+                                <tr><th>දිනය හා වේලාව</th><th>පණිවිඩය</th><th>ක්‍රියාකාරකම්</th></tr>
+                            </thead>
+                            <tbody id="announcementsTableBody"><tr><td colspan="3" class="text-muted">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payments Modal -->
+    <div class="modal fade" id="paymentsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-info text-white"><h5 class="modal-title fw-bold"><i class="fa-solid fa-money-bill-wave me-2"></i> ගෙවීම් ඉතිහාසය (Payments History)</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body p-4">
+                    <div class="table-responsive" style="max-height: 350px;">
+                        <table class="table table-bordered table-striped text-center align-middle">
+                            <thead class="table-dark">
+                                <tr><th>Teacher ID</th><th>නම</th><th>මුදල (Rs.)</th><th>දිනය හා වේලාව</th><th>විස්තරය</th></tr>
+                            </thead>
+                            <tbody id="paymentsTableBody"><tr><td colspan="5" class="text-muted">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Logs Modal -->
+    <div class="modal fade" id="logsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-dark text-white"><h5 class="modal-title fw-bold"><i class="fa-solid fa-list-check me-2"></i> ක්‍රියාකාරකම් ලොග් (Activity Logs)</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body p-4">
+                    <div class="table-responsive" style="max-height: 350px;">
+                        <table class="table table-sm table-bordered table-striped text-center align-middle">
+                            <thead class="table-secondary">
+                                <tr><th>දිනය හා වේලාව</th><th>පරිශීලකයා (User)</th><th>සිදුකළ ක්‍රියාව (Action)</th></tr>
+                            </thead>
+                            <tbody id="logsTableBody"><tr><td colspan="3" class="text-muted">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbxVlorH8zI-bVs93OXVEufb6A1BcGc_QmS7Ob1IwXGsg2Iu18UTQXXkDT1LKt9ILlCC6A/exec";
+        let allTeachersData = [];
+        let allAnnouncementsData = [];
+        let systemChartInstance = null;
+
+        document.getElementById('adminPass').addEventListener('keypress', function (e) { if (e.key === 'Enter') adminLogin(); });
+        document.getElementById('adminUser').addEventListener('keypress', function (e) { if (e.key === 'Enter') adminLogin(); });
+
+        function adminLogin() {
+            let u = document.getElementById('adminUser').value.trim();
+            let p = document.getElementById('adminPass').value.trim();
+            let err = document.getElementById('adminLoginError');
+
+            if(u === "Hirusha" && p === "Hirusha5522") {
+                document.getElementById('adminLoginPage').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadAdminStats();
+            } else {
+                err.innerText = "Username හෝ Password වැරදියයි!";
+                err.style.display = "block";
+            }
+        }
+
+        function adminLogout() {
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('adminLoginPage').style.display = 'flex';
+            document.getElementById('adminUser').value = "";
+            document.getElementById('adminPass').value = "";
+        }
+
+        function loadAdminStats() {
+            fetch(API_URL + "?action=getStats")
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('admTotalStudents').innerText = data.totalStudents;
+                document.getElementById('admTodayAttendance').innerText = data.todayAttendance;
+                document.getElementById('admTeachersCount').innerText = data.teachersCount;
+                document.getElementById('admRevenue').innerText = "Rs. " + (data.revenue ? data.revenue.toLocaleString() : 0);
+
+                allTeachersData = data.teachersList;
+                allAnnouncementsData = data.announcementsList || [];
+                
+                renderAnalyticsChart(data.teachersCount, data.totalStudents, data.todayAttendance);
+
+                let tbody = document.getElementById('adminTeachersTableBody');
+                let html = "";
+                data.teachersList.forEach(t => {
+                    let isDeactive = t.accountStatus === "Deactive";
+                    let isExpired = t.status === "Expired";
+                    
+                    let statusBadge = "";
+                    let dateTimeDisplay = `${t.expireDate || 'N/A'} <br><small class="text-muted">${t.expireTime || ''}</small>`;
+
+                    if (isDeactive || isExpired) {
+                        statusBadge = `<span class="badge bg-danger">${isDeactive ? 'Deactive' : 'Expired'}</span>`;
+                        dateTimeDisplay = `<span class="text-danger fw-bold">${t.expireDate || ''} <br><small>${t.expireTime || ''}</small></span>`;
+                    } else {
+                        statusBadge = `<span class="badge bg-success">Active</span>`;
+                    }
+
+                    html += `<tr>
+                        <td class="fw-bold">${t.id}</td>
+                        <td class="text-start">${t.name} <br><small class="text-muted">${t.subject}</small></td>
+                        <td>User: <code>${t.username}</code> <br>Pass: <code>${t.password || 'N/A'}</code></td>
+                        <td>${t.studentCount}</td>
+                        <td>${dateTimeDisplay}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-warning fw-bold" onclick="openEditTeacherModal('${t.id}')"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                        </td>
+                    </tr>`;
+                });
+                if(data.teachersList.length === 0) html = `<tr><td colspan="7" class="text-muted">ගුරුවරුන් නොමැත.</td></tr>`;
+                tbody.innerHTML = html;
+
+                // Payments Table
+                let pBody = document.getElementById('paymentsTableBody');
+                let pHtml = "";
+                if(data.paymentsList) {
+                    data.paymentsList.forEach(p => {
+                        pHtml += `<tr><td>${p.teacherId}</td><td class="text-start">${p.teacherName}</td><td class="fw-bold text-success">Rs. ${Number(p.amount).toLocaleString()}</td><td>${p.date}</td><td class="text-start">${p.description}</td></tr>`;
+                    });
+                }
+                if(!data.paymentsList || data.paymentsList.length === 0) pHtml = `<tr><td colspan="5" class="text-muted">ගෙවීම් වාර්තා නොමැත.</td></tr>`;
+                pBody.innerHTML = pHtml;
+
+                // Logs Table
+                let lBody = document.getElementById('logsTableBody');
+                let lHtml = "";
+                if(data.logsList) {
+                    data.logsList.slice().reverse().forEach(l => {
+                        lHtml += `<tr><td>${l.timestamp}</td><td class="fw-bold">${l.user}</td><td class="text-start">${l.action}</td></tr>`;
+                    });
+                }
+                if(!data.logsList || data.logsList.length === 0) lHtml = `<tr><td colspan="3" class="text-muted">ක්‍රියාකාරකම් වාර්තා නොමැත.</td></tr>`;
+                lBody.innerHTML = lHtml;
+            });
+        }
+
+        function renderAnalyticsChart(teachers, students, attendance) {
+            const ctx = document.getElementById('systemChart').getContext('2d');
+            if(systemChartInstance) systemChartInstance.destroy();
+
+            systemChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['ගුරුවරුන්', 'මුළු සිසුන්', 'අද පැමිණීම'],
+                    datasets: [{
+                        data: [teachers, students, attendance],
+                        backgroundColor: ['#f59e0b', '#3b82f6', '#10b981'],
+                        borderWidth: 2
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        function calculateAddAmount() {
+            let months = parseInt(document.getElementById('addTMonths').value);
+            let total = months * 2500;
+            document.getElementById('calcAmountText').innerText = "ගෙවිය යුතු මුදල: Rs. " + total.toLocaleString();
+        }
+
+        function openAddTeacherModal() {
+            document.getElementById('addTName').value = "";
+            document.getElementById('addTSubj').value = "";
+            document.getElementById('addTUser').value = "";
+            document.getElementById('addTPass').value = "";
+            document.getElementById('addTMonths').value = "1";
+            document.getElementById('addTStatus').value = "Active";
+            calculateAddAmount();
+            new bootstrap.Modal(document.getElementById('addTeacherModal')).show();
+        }
+
+        function openEditTeacherModal(teacherId) {
+            let t = allTeachersData.find(item => item.id === teacherId);
+            if(!t) return;
+            document.getElementById('editTeacherId').value = t.id;
+            document.getElementById('editTName').value = t.name;
+            document.getElementById('editTUser').value = t.username;
+            document.getElementById('editTPass').value = t.password || '';
+            document.getElementById('editTExpDate').value = t.expireDate || '';
+            document.getElementById('editTExpTime').value = t.expireTime || '23:59';
+            document.getElementById('editTStatus').value = t.accountStatus || 'Active';
+            new bootstrap.Modal(document.getElementById('editTeacherModal')).show();
+        }
+
+        function openAddPaymentModal() {
+            let select = document.getElementById('paymentTeacherSelect');
+            select.innerHTML = "";
+            allTeachersData.forEach(t => {
+                select.innerHTML += `<option value="${t.id}" data-name="${t.name}">${t.name} (${t.id})</option>`;
+            });
+            document.getElementById('paymentAmount').value = "2500";
+            document.getElementById('paymentDesc').value = "Monthly Subscription Renewal";
+            new bootstrap.Modal(document.getElementById('addPaymentModal')).show();
+        }
+
+        function savePayment() {
+            let select = document.getElementById('paymentTeacherSelect');
+            let tId = select.value;
+            let tName = select.options[select.selectedIndex].getAttribute('data-name');
+            let amount = document.getElementById('paymentAmount').value;
+            let desc = document.getElementById('paymentDesc').value;
+
+            if(!tId || !amount) return alert("කරුණාකර සියලුම විස්තර පුරවන්න!");
+
+            let iframe = document.getElementById('hiddenSubFrame') || document.createElement('iframe');
+            iframe.id = 'hiddenSubFrame'; iframe.style.display = 'none'; document.body.appendChild(iframe);
+            iframe.src = API_URL + `?action=addPayment&teacherId=${encodeURIComponent(tId)}&teacherName=${encodeURIComponent(tName)}&amount=${encodeURIComponent(amount)}&description=${encodeURIComponent(desc)}`;
+
+            setTimeout(() => { bootstrap.Modal.getInstance(document.getElementById('addPaymentModal')).hide(); loadAdminStats(); alert("ගෙවීම සාර්ථකව එකතු විය!"); }, 1000);
+        }
+
+        function openAnnouncementModal() { 
+            document.getElementById('announcementText').value = ""; 
+            
+            // Render announcements table inside modal
+            let aBody = document.getElementById('announcementsTableBody');
+            let aHtml = "";
+            allAnnouncementsData.slice().reverse().forEach((ann, index) => {
+                let actualIndex = allAnnouncementsData.length - 1 - index; // row index in sheet roughly
+                aHtml += `<tr>
+                    <td class="small text-muted">${ann.timestamp}</td>
+                    <td class="text-start">${ann.message}</td>
+                    <td><button class="btn btn-sm btn-outline-danger fw-bold" onclick="deleteAnnouncement(${actualIndex})"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>`;
+            });
+            if(allAnnouncementsData.length === 0) aHtml = `<tr><td colspan="3" class="text-muted">නිවේදන නොමැත.</td></tr>`;
+            aBody.innerHTML = aHtml;
+
+            new bootstrap.Modal(document.getElementById('announcementModal')).show(); 
+        }
+
+        function openPaymentsModal() { new bootstrap.Modal(document.getElementById('paymentsModal')).show(); }
+        function openLogsModal() { new bootstrap.Modal(document.getElementById('logsModal')).show(); }
+
+        function saveEditedTeacher() {
+            let id = document.getElementById('editTeacherId').value;
+            let name = document.getElementById('editTName').value;
+            let user = document.getElementById('editTUser').value;
+            let pass = document.getElementById('editTPass').value;
+            let expDate = document.getElementById('editTExpDate').value;
+            let expTime = document.getElementById('editTExpTime').value;
+            let status = document.getElementById('editTStatus').value;
+
+            let iframe = document.getElementById('hiddenSubFrame') || document.createElement('iframe');
+            iframe.id = 'hiddenSubFrame'; iframe.style.display = 'none'; document.body.appendChild(iframe);
+            iframe.src = API_URL + `?action=updateTeacher&teacherId=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&expDate=${encodeURIComponent(expDate)}&expTime=${encodeURIComponent(expTime)}&status=${encodeURIComponent(status)}`;
+
+            setTimeout(() => { bootstrap.Modal.getInstance(document.getElementById('editTeacherModal')).hide(); loadAdminStats(); alert("සාර්ථකව යාවත්කාලීන විය!"); }, 1000);
+        }
+
+        function saveNewTeacher() {
+            let name = document.getElementById('addTName').value;
+            let subj = document.getElementById('addTSubj').value;
+            let user = document.getElementById('addTUser').value;
+            let pass = document.getElementById('addTPass').value;
+            let months = document.getElementById('addTMonths').value;
+            let status = document.getElementById('addTStatus').value;
+
+            if(!name || !user || !pass) return alert("කරුණාකර සියලුම තොරතුරු ඇතුළත් කරන්න!");
+
+            let iframe = document.getElementById('hiddenSubFrame') || document.createElement('iframe');
+            iframe.id = 'hiddenSubFrame'; iframe.style.display = 'none'; document.body.appendChild(iframe);
+            iframe.src = API_URL + `?action=addTeacher&name=${encodeURIComponent(name)}&subject=${encodeURIComponent(subj)}&username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&months=${encodeURIComponent(months)}&status=${encodeURIComponent(status)}`;
+
+            setTimeout(() => { bootstrap.Modal.getInstance(document.getElementById('addTeacherModal')).hide(); loadAdminStats(); alert("නව ගුරුවරයා සහ ගෙවීම සාර්ථකව එකතු විය!"); }, 1000);
+        }
+
+        function sendAnnouncement() {
+            let msg = document.getElementById('announcementText').value.trim();
+            if(!msg) return alert("නිවේදන පණිවිඩය ඇතුළත් කරන්න!");
+
+            let iframe = document.getElementById('hiddenSubFrame') || document.createElement('iframe');
+            iframe.id = 'hiddenSubFrame'; iframe.style.display = 'none'; document.body.appendChild(iframe);
+            iframe.src = API_URL + `?action=addAnnouncement&message=` + encodeURIComponent(msg);
+
+            setTimeout(() => { bootstrap.Modal.getInstance(document.getElementById('announcementModal')).hide(); loadAdminStats(); alert("නිවේදනය සාර්ථකව යවන ලදී!"); }, 1000);
+        }
+
+        function deleteAnnouncement(rowIndex) {
+            if(confirm("මෙම නිවේදනය ඉවත් කිරීමට අවශ්‍ය බව ස්ථිරද?")) {
+                let iframe = document.getElementById('hiddenSubFrame') || document.createElement('iframe');
+                iframe.id = 'hiddenSubFrame'; iframe.style.display = 'none'; document.body.appendChild(iframe);
+                iframe.src = API_URL + `?action=deleteAnnouncement&rowIndex=` + rowIndex;
+
+                setTimeout(() => { bootstrap.Modal.getInstance(document.getElementById('announcementModal')).hide(); loadAdminStats(); alert("නිවේදනය ඉවත් කරන ලදී!"); }, 1000);
+            }
+        }
+    </script>
+</body>
+</html>
