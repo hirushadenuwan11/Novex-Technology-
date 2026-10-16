@@ -1,860 +1,860 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Novex Technology - Teacher Portal</title>
-    
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Libraries -->
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-dark: #3730a3;
-            --success: #10b981;
-            --danger: #ef4444;
-            --dark-bg: #0f172a;
-            --sidebar-width: 260px;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novex Technology - Teacher Portal</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Libraries -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark-bg: #0f172a;
+            --sidebar-width: 260px;
+        }
 
-        body { 
-            background-color: #f1f5f9; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            color: #334155;
-            overflow-x: hidden;
-        }
+        body { 
+            background-color: #f1f5f9; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            color: #334155;
+            overflow-x: hidden;
+        }
 
-        /* Modern Professional Login */
-        .login-container { 
-            height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('https://lh3.googleusercontent.com/d/1O2hs_QCyjRALy99kSQtVy-zLNRBIKRWf') no-repeat center center fixed; 
-            background-size: cover;
-            padding: 20px; 
-        }
+        /* Modern Professional Login */
+        .login-container { 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('https://lh3.googleusercontent.com/d/1O2hs_QCyjRALy99kSQtVy-zLNRBIKRWf') no-repeat center center fixed; 
+            background-size: cover;
+            padding: 20px; 
+        }
 
-        .login-card { 
-            background: rgba(255, 255, 255, 0.98); 
-            backdrop-filter: blur(16px); 
-            padding: 40px; 
-            border-radius: 24px; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
-            width: 100%; 
-            max-width: 440px; 
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+        .login-card { 
+            background: rgba(255, 255, 255, 0.98); 
+            backdrop-filter: blur(16px); 
+            padding: 40px; 
+            border-radius: 24px; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+            width: 100%; 
+            max-width: 440px; 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
 
-        /* Dashboard Layout */
-        #dashboardPage { display: none; min-height: 100vh; }
-        
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--dark-bg);
-            color: #94a3b8;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            z-index: 100;
-            padding: 25px 20px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 4px 0 25px rgba(0,0,0,0.05);
-        }
+        /* Dashboard Layout */
+        #dashboardPage { display: none; min-height: 100vh; }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--dark-bg);
+            color: #94a3b8;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 25px rgba(0,0,0,0.05);
+        }
 
-        .sidebar-brand {
-            color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 35px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
+        .sidebar-brand {
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 35px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
 
-        .main-content {
-            margin-left: var(--sidebar-width);
-            padding: 30px;
-        }
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+        }
 
-        .top-navbar {
-            background: white;
-            border-radius: 16px;
-            padding: 18px 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            border: 1px solid #e2e8f0;
-        }
+        .top-navbar {
+            background: white;
+            border-radius: 16px;
+            padding: 18px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+        }
 
-        /* Cards & Elements */
-        .stat-card-modern {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            border: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
+        /* Cards & Elements */
+        .stat-card-modern {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
 
-        .stat-card-modern:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-        }
+        .stat-card-modern:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+        }
 
-        .stat-card-modern::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 5px;
-            background: var(--primary);
-        }
+        .stat-card-modern::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: var(--primary);
+        }
 
-        .stat-card-modern.present::before { background: var(--success); }
-        .stat-card-modern.absent::before { background: var(--danger); }
+        .stat-card-modern.present::before { background: var(--success); }
+        .stat-card-modern.absent::before { background: var(--danger); }
 
-        .action-tile {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            font-weight: 600;
-            color: #475569;
-        }
+        .action-tile {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            font-weight: 600;
+            color: #475569;
+        }
 
-        .action-tile:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.08);
-        }
+        .action-tile:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.08);
+        }
 
-        .scan-btn-modern {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-            border-radius: 16px;
-            padding: 18px;
-            border: none;
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
-            width: 100%;
-            transition: all 0.3s;
-        }
-        .scan-btn-modern:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4); color: white; }
+        .scan-btn-modern {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-radius: 16px;
+            padding: 18px;
+            border: none;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .scan-btn-modern:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4); color: white; }
 
-        .expiry-badge { display: inline-block; padding: 6px 16px; border-radius: 50px; font-weight: 600; font-size: 0.85rem; }
-        .expiry-normal { background-color: #d1fae5; color: #065f46; }
-        .expiry-warning { background-color: #fef3c7; color: #92400e; }
-        .expiry-danger { background-color: #fee2e2; color: #991b1b; }
+        .expiry-badge { display: inline-block; padding: 6px 16px; border-radius: 50px; font-weight: 600; font-size: 0.85rem; }
+        .expiry-normal { background-color: #d1fae5; color: #065f46; }
+        .expiry-warning { background-color: #fef3c7; color: #92400e; }
+        .expiry-danger { background-color: #fee2e2; color: #991b1b; }
 
-        .id-card-wrapper { background: linear-gradient(135deg, #fff 0%, #f8fafc 100%); border: 2px solid #cbd5e1; border-radius: 20px; width: 280px; margin: 0 auto; text-align: center; overflow: hidden; padding-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
-        .id-card-header { background: linear-gradient(135deg, #1e1b4b, #4338ca); color: white; padding: 18px; font-weight: 700; font-size: 1.1rem; border-bottom-left-radius: 50% 15px; border-bottom-right-radius: 50% 15px; }
-        .qr-container { background: white; padding: 12px; border-radius: 12px; display: inline-block; margin: 15px 0; border: 1px solid #e2e8f0; }
+        .id-card-wrapper { background: linear-gradient(135deg, #fff 0%, #f8fafc 100%); border: 2px solid #cbd5e1; border-radius: 20px; width: 280px; margin: 0 auto; text-align: center; overflow: hidden; padding-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .id-card-header { background: linear-gradient(135deg, #1e1b4b, #4338ca); color: white; padding: 18px; font-weight: 700; font-size: 1.1rem; border-bottom-left-radius: 50% 15px; border-bottom-right-radius: 50% 15px; }
+        .qr-container { background: white; padding: 12px; border-radius: 12px; display: inline-block; margin: 15px 0; border: 1px solid #e2e8f0; }
 
-        .announcement-box { background: #e0e7ff; border-left: 6px solid var(--primary); padding: 20px; border-radius: 16px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.05); }
-        
-        #reader { width: 100%; border-radius: 16px; overflow: hidden; border: 2px solid #e2e8f0; }
-        .form-control, .form-select { border-radius: 12px; padding: 12px 16px; border: 1px solid #cbd5e1; }
-        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15); }
-        .btn-primary { background-color: var(--primary); border: none; border-radius: 12px; padding: 12px 20px; font-weight: 600; }
-        .btn-primary:hover { background-color: var(--primary-dark); }
-        
-        @media (max-width: 992px) {
-            .sidebar { display: none; }
-            .main-content { margin-left: 0; padding: 15px; }
-        }
-    </style>
+        .announcement-box { background: #e0e7ff; border-left: 6px solid var(--primary); padding: 20px; border-radius: 16px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.05); }
+        
+        #reader { width: 100%; border-radius: 16px; overflow: hidden; border: 2px solid #e2e8f0; }
+        .form-control, .form-select { border-radius: 12px; padding: 12px 16px; border: 1px solid #cbd5e1; }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15); }
+        .btn-primary { background-color: var(--primary); border: none; border-radius: 12px; padding: 12px 20px; font-weight: 600; }
+        .btn-primary:hover { background-color: var(--primary-dark); }
+        
+        @media (max-width: 992px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 15px; }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- LOGIN PAGE -->
-    <div id="loginPage" class="login-container">
-        <div class="login-card text-center">
-            <div class="mb-4">
-                <div class="mb-3">
-                    <img src="https://lh3.googleusercontent.com/d/1YgrgTrhCQpRQclIiQjhAb_LmvEO2eLXQ" alt="Logo" style="width: 75px; height: 75px; object-fit: contain; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);">
-                </div>
-                <h3 class="fw-bold text-dark m-0">Novex Technology</h3>
-                <p class="text-muted small mt-1 fw-semibold">Teacher Portal Access</p>
-            </div>
-            <div class="mb-3 text-start">
-                <label class="form-label text-secondary fw-bold small">භාවිත නාමය (Username)</label>
-                <input type="text" class="form-control bg-light" placeholder="Username ඇතුළත් කරන්න" id="teacherUsername">
-            </div>
-            <div class="mb-3 text-start">
-                <label class="form-label text-secondary fw-bold small">මුරපදය (Password)</label>
-                <input type="password" class="form-control bg-light" placeholder="••••••••" id="teacherPassword">
-            </div>
-            <div id="loginErrorMsg" class="alert alert-danger py-2 mb-3 small fw-bold rounded-3" style="display:none;"></div>
-            <button class="btn btn-primary w-100 fw-bold py-3 shadow-sm mt-2" id="loginBtn" onclick="doLogin()">ඇතුල් වන්න (Login)</button>
-        </div>
-    </div>
-
-    <!-- DASHBOARD -->
-    <div id="dashboardPage">
-        <!-- Sidebar for Desktop -->
-        <div class="sidebar">
-            <div class="sidebar-brand">
-                <img src="https://lh3.googleusercontent.com/d/1YgrgTrhCQpRQclIiQjhAb_LmvEO2eLXQ" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px;">
-                <span>Novex Technology</span>
-            </div>
-            <div class="text-white-50 small fw-bold mb-2">QUICK ACTIONS</div>
-            <ul class="nav flex-column gap-2">
-                <li class="nav-item"><a href="#" onclick="openWindow('teacherAddStudentModal')" class="nav-link text-white rounded-3 py-2 px-3 bg-white bg-opacity-10"><i class="fa-solid fa-user-plus me-2"></i> නව ශිෂ්‍යයෙක්</a></li>
-                <li class="nav-item"><a href="#" onclick="openWindow('teacherStudentsListModal')" class="nav-link text-white-50 rounded-3 py-2 px-3"><i class="fa-solid fa-users-rectangle me-2"></i> ළමයි ලැයිස්තුව</a></li>
-                <li class="nav-item"><a href="#" onclick="openWindow('teacherReportModal')" class="nav-link text-white-50 rounded-3 py-2 px-3"><i class="fa-solid fa-list-check me-2"></i> වාර්තා</a></li>
-            </ul>
-            <div class="mt-auto">
-                <button class="btn btn-outline-light w-100 fw-bold rounded-pill btn-sm py-2" onclick="doLogout()"><i class="fa-solid fa-power-off me-1"></i> ඉවත් වන්න</button>
-            </div>
-        </div>
-
-        <!-- Main Content Area -->
-        <div class="main-content">
-            <div class="top-navbar">
-                <div>
-                    <h5 class="m-0 fw-bold text-dark" id="welcomeText">ආයුබෝවන්!</h5>
-                    <div class="mt-2" id="expiryInfoBox"></div>
-                </div>
-                <button class="btn btn-sm btn-outline-danger fw-bold rounded-pill px-4 d-lg-none" onclick="doLogout()"><i class="fa-solid fa-power-off"></i></button>
-            </div>
-
-            <!-- System Announcements Section -->
-            <div id="announcementSection" class="announcement-box" style="display:none;">
-                <h6 class="fw-bold mb-1 text-indigo-900"><i class="fa-solid fa-bullhorn me-2"></i> පරිපාලක විශේෂ නිවේදනය (System Announcement)</h6>
-                <p id="announcementContent" class="m-0 text-dark small"></p>
-            </div>
-
-            <!-- Stats Rows -->
-            <div class="row g-4 mb-4">
-                <div class="col-md-4"><div class="stat-card-modern"><div><small class="text-muted fw-bold d-block mb-1">මුළු සිසුන්</small><h2 class="m-0 fw-bold text-primary" id="tTotalStudents">0</h2></div><i class="fa-solid fa-users text-primary opacity-25 fs-1"></i></div></div>
-                <div class="col-md-4"><div class="stat-card-modern present"><div><small class="text-muted fw-bold d-block mb-1">පැමිණි</small><h2 class="m-0 fw-bold text-success" id="tPresentCount">0</h2></div><i class="fa-solid fa-user-check text-success opacity-25 fs-1"></i></div></div>
-                <div class="col-md-4"><div class="stat-card-modern absent"><div><small class="text-muted fw-bold d-block mb-1">නොපැමිණි</small><h2 class="m-0 fw-bold text-danger" id="tAbsentCount">0</h2></div><i class="fa-solid fa-user-xmark text-danger opacity-25 fs-1"></i></div></div>
-            </div>
-
-            <!-- Quick Action Tiles (Mobile View) -->
-            <div class="row g-3 mb-4 d-lg-none">
-                <div class="col-4"><div class="action-tile" onclick="openWindow('teacherAddStudentModal')"><i class="fa-solid fa-user-plus fa-lg mb-2 text-primary"></i><div class="small">නව ශිෂ්‍යයෙක්</div></div></div>
-                <div class="col-4"><div class="action-tile" onclick="openWindow('teacherStudentsListModal')"><i class="fa-solid fa-users-rectangle fa-lg mb-2 text-info"></i><div class="small">ළමයි ලැයිස්තුව</div></div></div>
-                <div class="col-4"><div class="action-tile" onclick="openWindow('teacherReportModal')"><i class="fa-solid fa-list-check fa-lg mb-2 text-warning"></i><div class="small">වාර්තා</div></div></div>
-            </div>
-
-            <!-- Mode Selector: Arrival / Exit -->
-            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 text-center bg-white">
-                <label class="form-label fw-bold text-secondary small mb-3">ස්කෑන් කළ යුත්තේ කුමකටද?</label>
-                <div class="btn-group w-100" role="group">
-                    <input type="radio" class="btn-check" name="scanMode" id="modeArrival" value="arrival" checked>
-                    <label class="btn btn-outline-success fw-bold py-2" for="modeArrival"><i class="fa-solid fa-right-to-bracket me-2"></i> පැමිණීම (Arrival)</label>
-
-                    <input type="radio" class="btn-check" name="scanMode" id="modeExit" value="exit">
-                    <label class="btn btn-outline-danger fw-bold py-2" for="modeExit"><i class="fa-solid fa-right-from-bracket me-2"></i> පිටවීම (Exit)</label>
-                </div>
-            </div>
-
-            <!-- Manual ID Entry -->
-            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
-                <label class="form-label fw-bold text-secondary small mb-2"><i class="fa-solid fa-keyboard me-2"></i> ID අංකය මගින් සටහන් කරන්න:</label>
-                <div class="input-group">
-                    <input type="text" id="manualIdInput" class="form-control bg-light" placeholder="උදා: ST-001">
-                    <button class="btn btn-primary fw-bold px-4" onclick="manualEntry()">Mark</button>
-                </div>
-            </div>
-
-            <!-- Scanner Trigger -->
-            <div class="d-grid gap-2 mb-4" id="scanButtonContainer">
-                <button class="btn scan-btn-modern" onclick="startScanner()"><i class="fa-solid fa-camera me-2"></i> QR කෝඩ් එක Scan කරන්න</button>
-            </div>
-
-            <!-- Scanner Viewport -->
-            <div id="scannerContainer" style="display: none;" class="mb-4 text-center card border-0 shadow-sm rounded-4 p-4 bg-white">
-                <div id="reader" class="mb-3"></div>
-                <button class="btn btn-danger px-4 rounded-pill fw-bold" onclick="stopScanner()"><i class="fa-solid fa-xmark me-2"></i> Cancel Scanning</button>
-            </div>
-
-            <!-- Scanned Log -->
-            <h6 class="fw-bold mb-3 text-secondary"><i class="fa-solid fa-clock-rotate-left me-2"></i> අද දින ක්‍රියාකාරකම් (Scanned Log)</h6>
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
-                <div class="list-group list-group-flush" id="scannedList"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODALS -->
-    <div class="modal fade" id="duplicateAlertModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4 text-center p-4">
-                <div class="mb-3"><i class="fa-solid fa-triangle-exclamation text-warning fa-3x"></i></div>
-                <h4 class="fw-bold text-dark mb-2">දැනටමත් සටහන් කර ඇත!</h4>
-                <p class="text-muted mb-4" id="duplicateMsg">මෙම ශිෂ්‍යයා අද දින දැනටමත් සටහන් කර ඇත.</p>
-                <button type="button" class="btn btn-dark w-100 fw-bold py-2 rounded-pill" data-bs-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Student Modal -->
-    <div class="modal fade" id="teacherAddStudentModal" tabindex="-1" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header bg-primary text-white border-0 py-3">
-                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-plus me-2"></i> නව ශිෂ්‍යයෙක් ලියාපදිංචි කිරීම</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" onclick="resetTeacherStudentForm()"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <div id="tStudentFormSection">
-                        <div class="mb-3"><label class="form-label fw-bold small">ශිෂ්‍ය ID අංකය</label><input type="text" id="tsId" class="form-control" placeholder="ST-1001"></div>
-                        <div class="mb-3"><label class="form-label fw-bold small">ශිෂ්‍යයාගේ නම</label><input type="text" id="tsName" class="form-control" placeholder="සමන් කුමාර"></div>
-                        <div class="mb-3"><label class="form-label fw-bold small">දුරකථන අංකය</label><input type="text" id="tsPhone" class="form-control" placeholder="07XXXXXXXX"></div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold small">දෙමව්පියාගේ Telegram Chat ID එක</label>
-                            <input type="text" id="tsChatId" class="form-control" placeholder="උදා: 123456789">
-                        </div>
-                        <button type="button" id="tSaveStudentBtn" class="btn btn-primary w-100 fw-bold mt-3 py-3 rounded-3" onclick="teacherSaveStudent()"><i class="fa-solid fa-save me-2"></i> Save & Generate QR</button>
-                    </div>
-
-                    <div id="tStudentQrSection" style="display:none;" class="text-center">
-                        <div class="alert alert-success text-center py-2 mb-3 fw-bold small rounded-3">සාර්ථකව ලියාපදිංචි විය!</div>
-                        <div class="id-card-wrapper mb-3" id="tIdCardElement">
-                            <div class="id-card-header"><i class="fa-solid fa-qrcode me-2"></i>Smart Attendance</div>
-                            <div class="qr-container" id="tQrcodeBox"></div>
-                            <div class="fw-bold fs-4 text-dark" id="tIdCardName"></div>
-                            <div class="fw-bold text-muted mb-2 small" id="tIdCardId"></div>
-                            <div class="small fw-bold text-primary" id="tIdCardTeacher"></div>
-                        </div>
-                        <button class="btn btn-success w-100 fw-bold py-2 rounded-3 shadow-sm" onclick="downloadTeacherQRCard()"><i class="fa-solid fa-download me-2"></i> Download ID Card (.png)</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Students List Modal -->
-    <div class="modal fade" id="teacherStudentsListModal" tabindex="-1">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header bg-info text-white border-0 py-3">
-                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-users-rectangle me-2"></i> මගේ පන්තියේ සිසුන් ලැයිස්තුව</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <div class="table-responsive" style="max-height: 450px; overflow-y: auto;">
-                        <table class="table table-bordered table-striped text-center align-middle m-0">
-                            <thead class="table-dark sticky-top">
-                                <tr>
-                                    <th>ID අංකය</th>
-                                    <th>නම</th>
-                                    <th>දුරකථන අංකය</th>
-                                    <th>Telegram Chat ID</th>
-                                    <th>ක්‍රියාකාරකම් (Actions)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="teacherStudentsTableBody"><tr><td colspan="5" class="text-muted py-3">Loading...</td></tr></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Student Modal -->
-    <div class="modal fade" id="editStudentModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header bg-warning text-dark border-0 py-3"><h5 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i> ශිෂ්‍ය විස්තර වෙනස් කිරීම (Edit)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body p-4">
-                    <input type="hidden" id="editStudentId">
-                    <div class="mb-3"><label class="form-label fw-bold small">නම</label><input type="text" id="editStudentName" class="form-control"></div>
-                    <div class="mb-3"><label class="form-label fw-bold small">දුරකථන අංකය</label><input type="text" id="editStudentPhone" class="form-control"></div>
-                    <div class="mb-3"><label class="form-label fw-bold small">Telegram Chat ID</label><input type="text" id="editStudentChatId" class="form-control"></div>
-                    <button class="btn btn-warning w-100 fw-bold text-dark py-2 mt-2" onclick="saveEditedStudent()">Update Student</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="hiddenQrContainer" style="display:none;"></div>
-
-    <!-- Daily Reports Modal with PDF Download -->
-    <div class="modal fade" id="teacherReportModal" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header bg-warning border-0 py-3"><h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-list-check me-2"></i> දෛනික පැමිණීම් වාර්තාව</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body p-4">
-                    <div class="row g-2 mb-3">
-                        <div class="col-8"><input type="date" id="tReportDate" class="form-control"></div>
-                        <div class="col-4"><button class="btn btn-dark w-100 fw-bold py-2" onclick="fetchTeacherReport()">View</button></div>
-                    </div>
-                    
-                    <div class="table-responsive mb-3" style="max-height: 280px; overflow-y: auto;">
-                        <table class="table table-sm table-bordered text-center align-middle m-0">
-                            <thead class="table-dark sticky-top">
-                                <tr>
-                                    <th>ID අංකය</th>
-                                    <th>ශිෂ්‍යයාගේ නම</th>
-                                    <th>පැමිණීම (Arrival)</th>
-                                    <th>පිටවීම (Exit)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="teacherReportTableBody"><tr><td colspan="4" class="text-muted py-3">දිනයක් තෝරා View ඔබන්න.</td></tr></tbody>
-                        </table>
-                    </div>
-
-                    <button class="btn btn-danger w-100 fw-bold shadow-sm py-2" id="downloadPdfBtn" style="display:none;" onclick="downloadReportPDF()"><i class="fa-solid fa-file-pdf me-2"></i> Download PDF Report (.pdf)</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxVlorH8zI-bVs93OXVEufb6A1BcGc_QmS7Ob1IwXGsg2Iu18UTQXXkDT1LKt9ILlCC6A/exec";
-        
-        let html5QrcodeScanner;
-        let loggedInTeacherName = "";
-        let currentStudentsData = [];
-        let currentReportData = [];
-
-        function openWindow(modalId) { 
-            new bootstrap.Modal(document.getElementById(modalId)).show(); 
-            if(modalId === 'teacherStudentsListModal') loadTeacherStudentsList();
-        }
-
-        function doLogin() {
-            let user = document.getElementById('teacherUsername').value.trim();
-            let pass = document.getElementById('teacherPassword').value.trim();
-            let errBox = document.getElementById('loginErrorMsg');
-            let loginBtn = document.getElementById('loginBtn');
-
-            if(user === "" || pass === "") { 
-                errBox.innerText = "කරුණාකර Username සහ Password ඇතුළත් කරන්න!"; 
-                errBox.style.display = "block"; 
-                return; 
-            }
-
-            loginBtn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> පරීක්ෂා කරමින්...";
-            errBox.style.display = "none";
-
-            fetch(API_URL + "?action=teacherLogin&username=" + encodeURIComponent(user) + "&password=" + encodeURIComponent(pass))
-            .then(res => res.json())
-            .then(data => {
-                loginBtn.innerHTML = "ඇතුල් වන්න (Login)";
-                
-                if(data.status === "success") {
-                    loggedInTeacherName = data.teacherName;
-                    document.getElementById('loginPage').style.display = 'none';
-                    document.getElementById('dashboardPage').style.display = 'block';
-                    document.getElementById('welcomeText').innerText = "ආයුබෝවන්, " + loggedInTeacherName + "!";
-                    
-                    let expDateStr = data.expireDate;
-                    let slTodayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Colombo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-                    let diffDays = Math.ceil((new Date(expDateStr) - new Date(slTodayStr)) / (1000 * 60 * 60 * 24));
-
-                    let badgeClass = diffDays > 5 ? "expiry-normal" : (diffDays > 0 ? "expiry-warning" : "expiry-danger");
-                    let badgeText = diffDays > 5 ? `ගිණුම ක්‍රියාත්මකයයි (තව දින ${diffDays} ක් ඉතිරියි)` : (diffDays > 0 ? `⚠️ ගිණුම කල් ඉකුත් වීමට ඇත්තේ දින ${diffDays} කි!` : `❌ ගිණුමේ කාලය අවසන් වී ඇත!`);
-
-                    document.getElementById('expiryInfoBox').innerHTML = `<span class="expiry-badge ${badgeClass}">${badgeText}</span>`;
-                    
-                    loadAnnouncements();
-                    loadTeacherStats(); 
-                } else {
-                    errBox.innerText = data.message; 
-                    errBox.style.display = "block";
-                }
-            })
-            .catch(err => {
-                loginBtn.innerHTML = "ඇතුල් වන්න (Login)";
-                errBox.innerText = "දෝෂයක් සිදු විය. කරුණාකර නැවත උත්සාහ කරන්න!";
-                errBox.style.display = "block";
-            });
-        }
-
-        function loadAnnouncements() {
-            fetch(API_URL + "?action=getStats")
-            .then(res => res.json())
-            .then(data => {
-                if(data.announcementsList && data.announcementsList.length > 0) {
-                    let latestAnn = data.announcementsList[data.announcementsList.length - 1];
-                    document.getElementById('announcementContent').innerText = latestAnn.message + " (" + latestAnn.timestamp + ")";
-                    document.getElementById('announcementSection').style.display = "block";
-                }
-            }).catch(err => {});
-        }
-
-        function doLogout() {
-            document.getElementById('dashboardPage').style.display = 'none';
-            document.getElementById('loginPage').style.display = 'flex';
-            document.getElementById('teacherUsername').value = ""; document.getElementById('teacherPassword').value = "";
-            document.getElementById('announcementSection').style.display = 'none';
-            stopScanner();
-        }
-
-        function loadTeacherStats() {
-            fetch(API_URL + "?action=getTeacherStats&teacher=" + encodeURIComponent(loggedInTeacherName))
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('tTotalStudents').innerText = data.total;
-                document.getElementById('tPresentCount').innerText = data.present;
-                document.getElementById('tAbsentCount').innerText = data.absent;
-            });
-        }
-
-        function loadTeacherStudentsList() {
-            let tbody = document.getElementById('teacherStudentsTableBody');
-            tbody.innerHTML = `<tr><td colspan="5"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</td></tr>`;
-
-            fetch(API_URL + "?action=getTeacherStats&teacher=" + encodeURIComponent(loggedInTeacherName))
-            .then(res => res.json())
-            .then(data => {
-                currentStudentsData = data.studentsList;
-                let html = "";
-                data.studentsList.forEach(s => {
-                    html += `<tr>
-                        <td class="fw-bold">${s.id}</td>
-                        <td class="text-start">${s.name}</td>
-                        <td>${s.phone}</td>
-                        <td><code class="text-dark">${s.chatId || 'N/A'}</code></td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-primary fw-bold me-1 px-3" onclick="openEditModal('${s.id}')"><i class="fa-solid fa-pen-to-square me-1"></i> Edit</button>
-                            <button class="btn btn-sm btn-outline-danger fw-bold me-1 px-3" onclick="deleteStudent('${s.id}')"><i class="fa-solid fa-trash me-1"></i> Delete</button>
-                            <button class="btn btn-sm btn-outline-success fw-bold px-3" onclick="downloadStudentQR('${s.id}', '${s.name}')"><i class="fa-solid fa-qrcode me-1"></i> QR</button>
-                        </td>
-                    </tr>`;
-                });
-                if(data.studentsList.length === 0) html = `<tr><td colspan="5" class="text-muted py-3">ලියාපදිංචි සිසුන් නොමැත.</td></tr>`;
-                tbody.innerHTML = html;
-            });
-        }
-
-        function openEditModal(studentId) {
-            let student = currentStudentsData.find(s => s.id === studentId);
-            if(!student) return;
-
-            document.getElementById('editStudentId').value = student.id;
-            document.getElementById('editStudentName').value = student.name;
-            document.getElementById('editStudentPhone').value = student.phone;
-            document.getElementById('editStudentChatId').value = student.chatId || '';
-
-            new bootstrap.Modal(document.getElementById('editStudentModal')).show();
-        }
-
-        function saveEditedStudent() {
-            let id = document.getElementById('editStudentId').value;
-            let name = document.getElementById('editStudentName').value;
-            let phone = document.getElementById('editStudentPhone').value;
-            let chatId = document.getElementById('editStudentChatId').value;
-
-            let iframe = document.getElementById('hiddenSubmissionFrame');
-            if (!iframe) {
-                iframe = document.createElement('iframe');
-                iframe.id = 'hiddenSubmissionFrame';
-                iframe.style.display = 'none';
-                document.body.appendChild(iframe);
-            }
-            iframe.src = API_URL + `?action=updateStudent&studentId=${encodeURIComponent(id)}&studentName=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&chatId=${encodeURIComponent(chatId)}`;
-
-            setTimeout(() => {
-                bootstrap.Modal.getInstance(document.getElementById('editStudentModal')).hide();
-                loadTeacherStudentsList();
-                alert("විස්තර සාර්ථකව යාවත්කාලීන විය!");
-            }, 1000);
-        }
-
-        function deleteStudent(studentId) {
-            if(confirm("මෙම ශිෂ්‍යයාව/ශිෂ්‍යයා ඉවත් කිරීමට අවශ්‍ය බව ස්ථිරද?")) {
-                let iframe = document.getElementById('hiddenSubmissionFrame');
-                if (!iframe) {
-                    iframe = document.createElement('iframe');
-                    iframe.id = 'hiddenSubmissionFrame';
-                    iframe.style.display = 'none';
-                    document.body.appendChild(iframe);
-                }
-                iframe.src = API_URL + `?action=deleteStudent&studentId=${encodeURIComponent(studentId)}`;
-
-                setTimeout(() => {
-                    loadTeacherStudentsList();
-                    loadTeacherStats();
-                    alert("සාර්ථකව ඉවත් කරන ලදී!");
-                }, 1000);
-            }
-        }
-
-        function downloadStudentQR(studentId, studentName) {
-            let container = document.getElementById('hiddenQrContainer');
-            container.innerHTML = `
-                <div id="tempCard" style="background: white; padding: 25px; border: 2px solid #4f46e5; border-radius: 20px; width: 280px; text-align: center;">
-                    <h4 style="color: #4f46e5; margin-bottom: 15px; font-weight: bold;">Smart Attendance</h4>
-                    <div id="tempQrBox" style="display:inline-block; margin: 10px 0;"></div>
-                    <h3 style="color: #1e293b; margin: 10px 0 5px 0; font-weight: bold;">${studentName}</h3>
-                    <p style="color: #64748b; font-weight: bold; margin-bottom: 5px;">ID: ${studentId}</p>
-                    <p style="color: #4f46e5; font-size: 12px; margin: 0; font-weight: 600;">Teacher: ${loggedInTeacherName}</p>
-                </div>`;
-            
-            let qrBox = document.getElementById("tempQrBox");
-            new QRCode(qrBox, { text: studentId, width: 140, height: 140 });
-
-            setTimeout(() => {
-                html2canvas(document.getElementById('tempCard'), {scale: 3}).then(canvas => {
-                    let link = document.createElement('a');
-                    link.download = studentId + '_ID.png';
-                    link.href = canvas.toDataURL("image/png");
-                    link.click();
-                    container.innerHTML = "";
-                });
-            }, 300);
-        }
-
-        function teacherSaveStudent() {
-            let id = document.getElementById('tsId').value;
-            let name = document.getElementById('tsName').value;
-            let phone = document.getElementById('tsPhone').value;
-            let chatId = document.getElementById('tsChatId').value;
-
-            if(!id || !name) return alert("ID අංකය සහ නම අනිවාර්යයි!");
-
-            let btn = document.getElementById('tSaveStudentBtn');
-            btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Saving...";
-            
-            let iframe = document.getElementById('hiddenSubmissionFrame');
-            if (!iframe) {
-                iframe = document.createElement('iframe');
-                iframe.id = 'hiddenSubmissionFrame';
-                iframe.style.display = 'none';
-                document.body.appendChild(iframe);
-            }
-            iframe.src = API_URL + `?action=addStudent&teacher=${encodeURIComponent(loggedInTeacherName)}&studentId=${encodeURIComponent(id)}&studentName=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&chatId=${encodeURIComponent(chatId)}`;
-
-            setTimeout(() => {
-                document.getElementById('tStudentFormSection').style.display = 'none';
-                document.getElementById('tStudentQrSection').style.display = 'block';
-                btn.innerHTML = "Save & Generate QR";
-
-                document.getElementById('tIdCardName').innerText = name;
-                document.getElementById('tIdCardId').innerText = "ID: " + id;
-                document.getElementById('tIdCardTeacher').innerText = "Teacher: " + loggedInTeacherName;
-
-                let qrBox = document.getElementById("tQrcodeBox");
-                qrBox.innerHTML = ""; 
-                new QRCode(qrBox, { text: id, width: 140, height: 140 });
-
-                loadTeacherStats(); 
-            }, 1200);
-        }
-
-        function downloadTeacherQRCard() {
-            html2canvas(document.getElementById('tIdCardElement'), {scale: 3}).then(canvas => {
-                let link = document.createElement('a');
-                link.download = document.getElementById('tsId').value + '_ID.png';
-                link.href = canvas.toDataURL("image/png");
-                link.click();
-            });
-        }
-
-        function resetTeacherStudentForm() {
-            document.getElementById('tsId').value = ""; document.getElementById('tsName').value = ""; document.getElementById('tsPhone').value = ""; document.getElementById('tsChatId').value = "";
-            document.getElementById('tStudentQrSection').style.display = 'none';
-            document.getElementById('tStudentFormSection').style.display = 'block';
-            loadTeacherStats();
-        }
-
-        function fetchTeacherReport() {
-            let date = document.getElementById('tReportDate').value;
-            if(!date) return alert("දිනයක් තෝරන්න!");
-
-            let tbody = document.getElementById('teacherReportTableBody');
-            tbody.innerHTML = `<tr><td colspan="4"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</td></tr>`;
-            document.getElementById('downloadPdfBtn').style.display = 'none';
-
-            fetch(API_URL + "?action=getTeacherReport&date=" + date + "&teacher=" + encodeURIComponent(loggedInTeacherName))
-            .then(res => res.json())
-            .then(data => {
-                currentReportData = data;
-                let html = "";
-                data.forEach(row => {
-                    html += `<tr>
-                        <td class="fw-bold">${row.studentId}</td>
-                        <td class="text-start">${row.studentName}</td>
-                        <td>${row.arrivalTime || '-'}</td>
-                        <td>${row.exitTime || '-'}</td>
-                    </tr>`;
-                });
-                if(data.length === 0) {
-                    html = `<tr><td colspan="4" class="text-muted py-3">මෙම දිනයට වාර්තා නොමැත.</td></tr>`;
-                } else {
-                    document.getElementById('downloadPdfBtn').style.display = 'block';
-                }
-                tbody.innerHTML = html;
-            });
-        }
-
-        function downloadReportPDF() {
-            const { jsPDF } = window.jspdf;
-            let doc = new jsPDF();
-            let date = document.getElementById('tReportDate').value;
-
-            doc.setFillColor(30, 41, 59); 
-            doc.rect(0, 0, 210, 40, "F");
-            
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(22);
-            doc.setFont("helvetica", "bold");
-            doc.text("Attendance Report", 14, 22);
-            
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
-            doc.setTextColor(148, 163, 184);
-            doc.text("Powered by Novex Technology", 14, 30);
-
-            doc.setFontSize(10);
-            doc.setTextColor(255, 255, 255);
-            doc.text("Teacher: " + loggedInTeacherName, 196, 20, { align: "right" });
-            doc.text("Date: " + date, 196, 28, { align: "right" });
-
-            let startY = 50;
-            doc.setFillColor(79, 70, 229); 
-            doc.rect(14, startY, 182, 10, "F");
-            
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "bold");
-            doc.text("Student ID", 20, startY + 7);
-            doc.text("Student Name", 70, startY + 7);
-            doc.text("Arrival Time", 125, startY + 7);
-            doc.text("Exit Time", 165, startY + 7);
-
-            startY += 10;
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(10);
-            let rowHeight = 10;
-
-            currentReportData.forEach((row, index) => {
-                if (startY > 270) {
-                    doc.addPage();
-                    startY = 20;
-                }
-                if (index % 2 === 0) {
-                    doc.setFillColor(248, 250, 252);
-                    doc.rect(14, startY, 182, rowHeight, "F");
-                }
-                
-                doc.setTextColor(51, 65, 85);
-                doc.text(String(row.studentId), 20, startY + 7);
-                doc.text(String(row.studentName), 70, startY + 7);
-                doc.text(String(row.arrivalTime || '-'), 125, startY + 7);
-                doc.text(String(row.exitTime || '-'), 165, startY + 7);
-                
-                startY += rowHeight;
-            });
-
-            doc.setFontSize(9);
-            doc.setTextColor(148, 163, 184);
-            doc.text("Official Report generated by Novex Technology Attendance System", 14, 285);
-
-            doc.save("Attendance_Report_" + date + ".pdf");
-        }
-
-        function manualEntry() {
-            let idValue = document.getElementById('manualIdInput').value.trim();
-            if(idValue !== "") { 
-                processAttendance(idValue); 
-                document.getElementById('manualIdInput').value = ""; 
-            } else { 
-                alert("ID අංකය ඇතුළත් කරන්න!"); 
-            }
-        }
-
-        function startScanner() {
-            document.getElementById('scanButtonContainer').style.display = 'none';
-            document.getElementById('scannerContainer').style.display = 'block';
-            html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
-            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-        }
-
-        function stopScanner() {
-            if (html5QrcodeScanner) { html5QrcodeScanner.clear(); }
-            document.getElementById('scannerContainer').style.display = 'none';
-            document.getElementById('scanButtonContainer').style.display = 'block';
-        }
-
-        function onScanSuccess(decodedText, decodedResult) { 
-            stopScanner(); 
-            processAttendance(decodedText); 
-        }
-        function onScanFailure(error) {}
-
-        function processAttendance(studentId) {
-            let mode = document.querySelector('input[name="scanMode"]:checked').value;
-            let actionName = mode === 'exit' ? 'exit' : 'arrival';
-            let actionTypeLabel = mode === 'exit' ? 'පිටවීම' : 'පැමිණීම';
-
-            let currentTime = new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Colombo' });
-            let statusText = mode === 'exit' ? 'පිටවුණා (Exit)' : 'පැමිණියා (Arrival)';
-            let badgeBg = mode === 'exit' ? 'bg-danger' : 'bg-success';
-
-            fetch(API_URL + `?action=${actionName}&studentId=${encodeURIComponent(studentId)}`)
-            .then(res => res.text())
-            .then(response => {
-                if (response.trim() === "Today Scan") {
-                    document.getElementById('duplicateMsg').innerText = `අද දින මෙම ID අංකය (${studentId}) සඳහා ${actionTypeLabel} දැනටමත් සටහන් කර ඇත!`;
-                    new bootstrap.Modal(document.getElementById('duplicateAlertModal')).show();
-                } else if (response.trim() === "Not Arrived") {
-                    alert("⚠️ මෙම ශිෂ්‍යයා අද දින තවම පන්තියට පැමිණ නැත (Arrival සටහන් කර නැත)!");
-                } else {
-                    let audio = new Audio('https://www.soundjay.com/buttons/sounds/button-3.mp3');
-                    audio.play().catch(e => {});
-
-                    let newStudentHTML = `
-                        <div class="list-group-item d-flex justify-content-between align-items-center p-3" style="background-color: #f8fff9;">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3"><i class="fa-solid fa-check text-success"></i></div>
-                                <div><h6 class="m-0 fw-bold">ID: ${studentId}</h6><small class="text-success fw-bold">පැමිණීම සාර්ථකව සටහන් විය & Telegram Alert යවන ලදී</small></div>
-                            </div>
-                            <div class="text-end"><span class="badge ${badgeBg} rounded-pill mb-1">${statusText}</span><br><small class="text-muted fw-bold">${currentTime}</small></div>
-                        </div>`;
-                    document.getElementById('scannedList').insertAdjacentHTML('afterbegin', newStudentHTML);
-                    loadTeacherStats();
-                }
-            })
-            .catch(err => {
-                console.error("Error:", err);
-            });
-        }
-
-        document.getElementById('teacherPassword').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') doLogin();
-        });
-        document.getElementById('teacherUsername').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') doLogin();
-        });
-        document.getElementById('manualIdInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') manualEntry();
-        });
-    </script>
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card text-center">
+            <div class="mb-4">
+                <div class="mb-3">
+                    <img src="https://lh3.googleusercontent.com/d/1YgrgTrhCQpRQclIiQjhAb_LmvEO2eLXQ" alt="Logo" style="width: 75px; height: 75px; object-fit: contain; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);">
+                </div>
+                <h3 class="fw-bold text-dark m-0">Novex Technology</h3>
+                <p class="text-muted small mt-1 fw-semibold">Teacher Portal Access</p>
+            </div>
+            <div class="mb-3 text-start">
+                <label class="form-label text-secondary fw-bold small">භාවිත නාමය (Username)</label>
+                <input type="text" class="form-control bg-light" placeholder="Username ඇතුළත් කරන්න" id="teacherUsername">
+            </div>
+            <div class="mb-3 text-start">
+                <label class="form-label text-secondary fw-bold small">මුරපදය (Password)</label>
+                <input type="password" class="form-control bg-light" placeholder="••••••••" id="teacherPassword">
+            </div>
+            <div id="loginErrorMsg" class="alert alert-danger py-2 mb-3 small fw-bold rounded-3" style="display:none;"></div>
+            <button class="btn btn-primary w-100 fw-bold py-3 shadow-sm mt-2" id="loginBtn" onclick="doLogin()">ඇතුල් වන්න (Login)</button>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboardPage">
+        <!-- Sidebar for Desktop -->
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <img src="https://lh3.googleusercontent.com/d/1YgrgTrhCQpRQclIiQjhAb_LmvEO2eLXQ" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 6px;">
+                <span>Novex Technology</span>
+            </div>
+            <div class="text-white-50 small fw-bold mb-2">QUICK ACTIONS</div>
+            <ul class="nav flex-column gap-2">
+                <li class="nav-item"><a href="#" onclick="openWindow('teacherAddStudentModal')" class="nav-link text-white rounded-3 py-2 px-3 bg-white bg-opacity-10"><i class="fa-solid fa-user-plus me-2"></i> නව ශිෂ්‍යයෙක්</a></li>
+                <li class="nav-item"><a href="#" onclick="openWindow('teacherStudentsListModal')" class="nav-link text-white-50 rounded-3 py-2 px-3"><i class="fa-solid fa-users-rectangle me-2"></i> ළමයි ලැයිස්තුව</a></li>
+                <li class="nav-item"><a href="#" onclick="openWindow('teacherReportModal')" class="nav-link text-white-50 rounded-3 py-2 px-3"><i class="fa-solid fa-list-check me-2"></i> වාර්තා</a></li>
+            </ul>
+            <div class="mt-auto">
+                <button class="btn btn-outline-light w-100 fw-bold rounded-pill btn-sm py-2" onclick="doLogout()"><i class="fa-solid fa-power-off me-1"></i> ඉවත් වන්න</button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <div class="top-navbar">
+                <div>
+                    <h5 class="m-0 fw-bold text-dark" id="welcomeText">ආයුබෝවන්!</h5>
+                    <div class="mt-2" id="expiryInfoBox"></div>
+                </div>
+                <button class="btn btn-sm btn-outline-danger fw-bold rounded-pill px-4 d-lg-none" onclick="doLogout()"><i class="fa-solid fa-power-off"></i></button>
+            </div>
+
+            <!-- System Announcements Section -->
+            <div id="announcementSection" class="announcement-box" style="display:none;">
+                <h6 class="fw-bold mb-1 text-indigo-900"><i class="fa-solid fa-bullhorn me-2"></i> පරිපාලක විශේෂ නිවේදනය (System Announcement)</h6>
+                <p id="announcementContent" class="m-0 text-dark small"></p>
+            </div>
+
+            <!-- Stats Rows -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-4"><div class="stat-card-modern"><div><small class="text-muted fw-bold d-block mb-1">මුළු සිසුන්</small><h2 class="m-0 fw-bold text-primary" id="tTotalStudents">0</h2></div><i class="fa-solid fa-users text-primary opacity-25 fs-1"></i></div></div>
+                <div class="col-md-4"><div class="stat-card-modern present"><div><small class="text-muted fw-bold d-block mb-1">පැමිණි</small><h2 class="m-0 fw-bold text-success" id="tPresentCount">0</h2></div><i class="fa-solid fa-user-check text-success opacity-25 fs-1"></i></div></div>
+                <div class="col-md-4"><div class="stat-card-modern absent"><div><small class="text-muted fw-bold d-block mb-1">නොපැමිණි</small><h2 class="m-0 fw-bold text-danger" id="tAbsentCount">0</h2></div><i class="fa-solid fa-user-xmark text-danger opacity-25 fs-1"></i></div></div>
+            </div>
+
+            <!-- Quick Action Tiles (Mobile View) -->
+            <div class="row g-3 mb-4 d-lg-none">
+                <div class="col-4"><div class="action-tile" onclick="openWindow('teacherAddStudentModal')"><i class="fa-solid fa-user-plus fa-lg mb-2 text-primary"></i><div class="small">නව ශිෂ්‍යයෙක්</div></div></div>
+                <div class="col-4"><div class="action-tile" onclick="openWindow('teacherStudentsListModal')"><i class="fa-solid fa-users-rectangle fa-lg mb-2 text-info"></i><div class="small">ළමයි ලැයිස්තුව</div></div></div>
+                <div class="col-4"><div class="action-tile" onclick="openWindow('teacherReportModal')"><i class="fa-solid fa-list-check fa-lg mb-2 text-warning"></i><div class="small">වාර්තා</div></div></div>
+            </div>
+
+            <!-- Mode Selector: Arrival / Exit -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 text-center bg-white">
+                <label class="form-label fw-bold text-secondary small mb-3">ස්කෑන් කළ යුත්තේ කුමකටද?</label>
+                <div class="btn-group w-100" role="group">
+                    <input type="radio" class="btn-check" name="scanMode" id="modeArrival" value="arrival" checked>
+                    <label class="btn btn-outline-success fw-bold py-2" for="modeArrival"><i class="fa-solid fa-right-to-bracket me-2"></i> පැමිණීම (Arrival)</label>
+
+                    <input type="radio" class="btn-check" name="scanMode" id="modeExit" value="exit">
+                    <label class="btn btn-outline-danger fw-bold py-2" for="modeExit"><i class="fa-solid fa-right-from-bracket me-2"></i> පිටවීම (Exit)</label>
+                </div>
+            </div>
+
+            <!-- Manual ID Entry -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                <label class="form-label fw-bold text-secondary small mb-2"><i class="fa-solid fa-keyboard me-2"></i> ID අංකය මගින් සටහන් කරන්න:</label>
+                <div class="input-group">
+                    <input type="text" id="manualIdInput" class="form-control bg-light" placeholder="උදා: ST-001">
+                    <button class="btn btn-primary fw-bold px-4" onclick="manualEntry()">Mark</button>
+                </div>
+            </div>
+
+            <!-- Scanner Trigger -->
+            <div class="d-grid gap-2 mb-4" id="scanButtonContainer">
+                <button class="btn scan-btn-modern" onclick="startScanner()"><i class="fa-solid fa-camera me-2"></i> QR කෝඩ් එක Scan කරන්න</button>
+            </div>
+
+            <!-- Scanner Viewport -->
+            <div id="scannerContainer" style="display: none;" class="mb-4 text-center card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <div id="reader" class="mb-3"></div>
+                <button class="btn btn-danger px-4 rounded-pill fw-bold" onclick="stopScanner()"><i class="fa-solid fa-xmark me-2"></i> Cancel Scanning</button>
+            </div>
+
+            <!-- Scanned Log -->
+            <h6 class="fw-bold mb-3 text-secondary"><i class="fa-solid fa-clock-rotate-left me-2"></i> අද දින ක්‍රියාකාරකම් (Scanned Log)</h6>
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                <div class="list-group list-group-flush" id="scannedList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div class="modal fade" id="duplicateAlertModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 text-center p-4">
+                <div class="mb-3"><i class="fa-solid fa-triangle-exclamation text-warning fa-3x"></i></div>
+                <h4 class="fw-bold text-dark mb-2">දැනටමත් සටහන් කර ඇත!</h4>
+                <p class="text-muted mb-4" id="duplicateMsg">මෙම ශිෂ්‍යයා අද දින දැනටමත් සටහන් කර ඇත.</p>
+                <button type="button" class="btn btn-dark w-100 fw-bold py-2 rounded-pill" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div class="modal fade" id="teacherAddStudentModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-primary text-white border-0 py-3">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-plus me-2"></i> නව ශිෂ්‍යයෙක් ලියාපදිංචි කිරීම</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" onclick="resetTeacherStudentForm()"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="tStudentFormSection">
+                        <div class="mb-3"><label class="form-label fw-bold small">ශිෂ්‍ය ID අංකය</label><input type="text" id="tsId" class="form-control" placeholder="ST-1001"></div>
+                        <div class="mb-3"><label class="form-label fw-bold small">ශිෂ්‍යයාගේ නම</label><input type="text" id="tsName" class="form-control" placeholder="සමන් කුමාර"></div>
+                        <div class="mb-3"><label class="form-label fw-bold small">දුරකථන අංකය</label><input type="text" id="tsPhone" class="form-control" placeholder="07XXXXXXXX"></div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">දෙමව්පියාගේ Telegram Chat ID එක</label>
+                            <input type="text" id="tsChatId" class="form-control" placeholder="උදා: 123456789">
+                        </div>
+                        <button type="button" id="tSaveStudentBtn" class="btn btn-primary w-100 fw-bold mt-3 py-3 rounded-3" onclick="teacherSaveStudent()"><i class="fa-solid fa-save me-2"></i> Save & Generate QR</button>
+                    </div>
+
+                    <div id="tStudentQrSection" style="display:none;" class="text-center">
+                        <div class="alert alert-success text-center py-2 mb-3 fw-bold small rounded-3">සාර්ථකව ලියාපදිංචි විය!</div>
+                        <div class="id-card-wrapper mb-3" id="tIdCardElement">
+                            <div class="id-card-header"><i class="fa-solid fa-qrcode me-2"></i>Smart Attendance</div>
+                            <div class="qr-container" id="tQrcodeBox"></div>
+                            <div class="fw-bold fs-4 text-dark" id="tIdCardName"></div>
+                            <div class="fw-bold text-muted mb-2 small" id="tIdCardId"></div>
+                            <div class="small fw-bold text-primary" id="tIdCardTeacher"></div>
+                        </div>
+                        <button class="btn btn-success w-100 fw-bold py-2 rounded-3 shadow-sm" onclick="downloadTeacherQRCard()"><i class="fa-solid fa-download me-2"></i> Download ID Card (.png)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Students List Modal -->
+    <div class="modal fade" id="teacherStudentsListModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-info text-white border-0 py-3">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-users-rectangle me-2"></i> මගේ පන්තියේ සිසුන් ලැයිස්තුව</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="table-responsive" style="max-height: 450px; overflow-y: auto;">
+                        <table class="table table-bordered table-striped text-center align-middle m-0">
+                            <thead class="table-dark sticky-top">
+                                <tr>
+                                    <th>ID අංකය</th>
+                                    <th>නම</th>
+                                    <th>දුරකථන අංකය</th>
+                                    <th>Telegram Chat ID</th>
+                                    <th>ක්‍රියාකාරකම් (Actions)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teacherStudentsTableBody"><tr><td colspan="5" class="text-muted py-3">Loading...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Student Modal -->
+    <div class="modal fade" id="editStudentModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-warning text-dark border-0 py-3"><h5 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i> ශිෂ්‍ය විස්තර වෙනස් කිරීම (Edit)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body p-4">
+                    <input type="hidden" id="editStudentId">
+                    <div class="mb-3"><label class="form-label fw-bold small">නම</label><input type="text" id="editStudentName" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">දුරකථන අංකය</label><input type="text" id="editStudentPhone" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Telegram Chat ID</label><input type="text" id="editStudentChatId" class="form-control"></div>
+                    <button class="btn btn-warning w-100 fw-bold text-dark py-2 mt-2" onclick="saveEditedStudent()">Update Student</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="hiddenQrContainer" style="display:none;"></div>
+
+    <!-- Daily Reports Modal with PDF Download -->
+    <div class="modal fade" id="teacherReportModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-warning border-0 py-3"><h5 class="modal-title fw-bold text-dark"><i class="fa-solid fa-list-check me-2"></i> දෛනික පැමිණීම් වාර්තාව</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body p-4">
+                    <div class="row g-2 mb-3">
+                        <div class="col-8"><input type="date" id="tReportDate" class="form-control"></div>
+                        <div class="col-4"><button class="btn btn-dark w-100 fw-bold py-2" onclick="fetchTeacherReport()">View</button></div>
+                    </div>
+                    
+                    <div class="table-responsive mb-3" style="max-height: 280px; overflow-y: auto;">
+                        <table class="table table-sm table-bordered text-center align-middle m-0">
+                            <thead class="table-dark sticky-top">
+                                <tr>
+                                    <th>ID අංකය</th>
+                                    <th>ශිෂ්‍යයාගේ නම</th>
+                                    <th>පැමිණීම (Arrival)</th>
+                                    <th>පිටවීම (Exit)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teacherReportTableBody"><tr><td colspan="4" class="text-muted py-3">දිනයක් තෝරා View ඔබන්න.</td></tr></tbody>
+                        </table>
+                    </div>
+
+                    <button class="btn btn-danger w-100 fw-bold shadow-sm py-2" id="downloadPdfBtn" style="display:none;" onclick="downloadReportPDF()"><i class="fa-solid fa-file-pdf me-2"></i> Download PDF Report (.pdf)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbxVlorH8zI-bVs93OXVEufb6A1BcGc_QmS7Ob1IwXGsg2Iu18UTQXXkDT1LKt9ILlCC6A/exec";
+        
+        let html5QrcodeScanner;
+        let loggedInTeacherName = "";
+        let currentStudentsData = [];
+        let currentReportData = [];
+
+        function openWindow(modalId) { 
+            new bootstrap.Modal(document.getElementById(modalId)).show(); 
+            if(modalId === 'teacherStudentsListModal') loadTeacherStudentsList();
+        }
+
+        function doLogin() {
+            let user = document.getElementById('teacherUsername').value.trim();
+            let pass = document.getElementById('teacherPassword').value.trim();
+            let errBox = document.getElementById('loginErrorMsg');
+            let loginBtn = document.getElementById('loginBtn');
+
+            if(user === "" || pass === "") { 
+                errBox.innerText = "කරුණාකර Username සහ Password ඇතුළත් කරන්න!"; 
+                errBox.style.display = "block"; 
+                return; 
+            }
+
+            loginBtn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> පරීක්ෂා කරමින්...";
+            errBox.style.display = "none";
+
+            fetch(API_URL + "?action=teacherLogin&username=" + encodeURIComponent(user) + "&password=" + encodeURIComponent(pass))
+            .then(res => res.json())
+            .then(data => {
+                loginBtn.innerHTML = "ඇතුල් වන්න (Login)";
+                
+                if(data.status === "success") {
+                    loggedInTeacherName = data.teacherName;
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('dashboardPage').style.display = 'block';
+                    document.getElementById('welcomeText').innerText = "ආයුබෝවන්, " + loggedInTeacherName + "!";
+                    
+                    let expDateStr = data.expireDate;
+                    let slTodayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Colombo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+                    let diffDays = Math.ceil((new Date(expDateStr) - new Date(slTodayStr)) / (1000 * 60 * 60 * 24));
+
+                    let badgeClass = diffDays > 5 ? "expiry-normal" : (diffDays > 0 ? "expiry-warning" : "expiry-danger");
+                    let badgeText = diffDays > 5 ? `ගිණුම ක්‍රියාත්මකයයි (තව දින ${diffDays} ක් ඉතිරියි)` : (diffDays > 0 ? `⚠️ ගිණුම කල් ඉකුත් වීමට ඇත්තේ දින ${diffDays} කි!` : `❌ ගිණුමේ කාලය අවසන් වී ඇත!`);
+
+                    document.getElementById('expiryInfoBox').innerHTML = `<span class="expiry-badge ${badgeClass}">${badgeText}</span>`;
+                    
+                    loadAnnouncements();
+                    loadTeacherStats(); 
+                } else {
+                    errBox.innerText = data.message; 
+                    errBox.style.display = "block";
+                }
+            })
+            .catch(err => {
+                loginBtn.innerHTML = "ඇතුල් වන්න (Login)";
+                errBox.innerText = "දෝෂයක් සිදු විය. කරුණාකර නැවත උත්සාහ කරන්න!";
+                errBox.style.display = "block";
+            });
+        }
+
+        function loadAnnouncements() {
+            fetch(API_URL + "?action=getStats")
+            .then(res => res.json())
+            .then(data => {
+                if(data.announcementsList && data.announcementsList.length > 0) {
+                    let latestAnn = data.announcementsList[data.announcementsList.length - 1];
+                    document.getElementById('announcementContent').innerText = latestAnn.message + " (" + latestAnn.timestamp + ")";
+                    document.getElementById('announcementSection').style.display = "block";
+                }
+            }).catch(err => {});
+        }
+
+        function doLogout() {
+            document.getElementById('dashboardPage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('teacherUsername').value = ""; document.getElementById('teacherPassword').value = "";
+            document.getElementById('announcementSection').style.display = 'none';
+            stopScanner();
+        }
+
+        function loadTeacherStats() {
+            fetch(API_URL + "?action=getTeacherStats&teacher=" + encodeURIComponent(loggedInTeacherName))
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('tTotalStudents').innerText = data.total;
+                document.getElementById('tPresentCount').innerText = data.present;
+                document.getElementById('tAbsentCount').innerText = data.absent;
+            });
+        }
+
+        function loadTeacherStudentsList() {
+            let tbody = document.getElementById('teacherStudentsTableBody');
+            tbody.innerHTML = `<tr><td colspan="5"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</td></tr>`;
+
+            fetch(API_URL + "?action=getTeacherStats&teacher=" + encodeURIComponent(loggedInTeacherName))
+            .then(res => res.json())
+            .then(data => {
+                currentStudentsData = data.studentsList;
+                let html = "";
+                data.studentsList.forEach(s => {
+                    html += `<tr>
+                        <td class="fw-bold">${s.id}</td>
+                        <td class="text-start">${s.name}</td>
+                        <td>${s.phone}</td>
+                        <td><code class="text-dark">${s.chatId || 'N/A'}</code></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary fw-bold me-1 px-3" onclick="openEditModal('${s.id}')"><i class="fa-solid fa-pen-to-square me-1"></i> Edit</button>
+                            <button class="btn btn-sm btn-outline-danger fw-bold me-1 px-3" onclick="deleteStudent('${s.id}')"><i class="fa-solid fa-trash me-1"></i> Delete</button>
+                            <button class="btn btn-sm btn-outline-success fw-bold px-3" onclick="downloadStudentQR('${s.id}', '${s.name}')"><i class="fa-solid fa-qrcode me-1"></i> QR</button>
+                        </td>
+                    </tr>`;
+                });
+                if(data.studentsList.length === 0) html = `<tr><td colspan="5" class="text-muted py-3">ලියාපදිංචි සිසුන් නොමැත.</td></tr>`;
+                tbody.innerHTML = html;
+            });
+        }
+
+        function openEditModal(studentId) {
+            let student = currentStudentsData.find(s => s.id === studentId);
+            if(!student) return;
+
+            document.getElementById('editStudentId').value = student.id;
+            document.getElementById('editStudentName').value = student.name;
+            document.getElementById('editStudentPhone').value = student.phone;
+            document.getElementById('editStudentChatId').value = student.chatId || '';
+
+            new bootstrap.Modal(document.getElementById('editStudentModal')).show();
+        }
+
+        function saveEditedStudent() {
+            let id = document.getElementById('editStudentId').value;
+            let name = document.getElementById('editStudentName').value;
+            let phone = document.getElementById('editStudentPhone').value;
+            let chatId = document.getElementById('editStudentChatId').value;
+
+            let iframe = document.getElementById('hiddenSubmissionFrame');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'hiddenSubmissionFrame';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+            }
+            iframe.src = API_URL + `?action=updateStudent&studentId=${encodeURIComponent(id)}&studentName=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&chatId=${encodeURIComponent(chatId)}`;
+
+            setTimeout(() => {
+                bootstrap.Modal.getInstance(document.getElementById('editStudentModal')).hide();
+                loadTeacherStudentsList();
+                alert("විස්තර සාර්ථකව යාවත්කාලීන විය!");
+            }, 1000);
+        }
+
+        function deleteStudent(studentId) {
+            if(confirm("මෙම ශිෂ්‍යයාව/ශිෂ්‍යයා ඉවත් කිරීමට අවශ්‍ය බව ස්ථිරද?")) {
+                let iframe = document.getElementById('hiddenSubmissionFrame');
+                if (!iframe) {
+                    iframe = document.createElement('iframe');
+                    iframe.id = 'hiddenSubmissionFrame';
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+                }
+                iframe.src = API_URL + `?action=deleteStudent&studentId=${encodeURIComponent(studentId)}`;
+
+                setTimeout(() => {
+                    loadTeacherStudentsList();
+                    loadTeacherStats();
+                    alert("සාර්ථකව ඉවත් කරන ලදී!");
+                }, 1000);
+            }
+        }
+
+        function downloadStudentQR(studentId, studentName) {
+            let container = document.getElementById('hiddenQrContainer');
+            container.innerHTML = `
+                <div id="tempCard" style="background: white; padding: 25px; border: 2px solid #4f46e5; border-radius: 20px; width: 280px; text-align: center;">
+                    <h4 style="color: #4f46e5; margin-bottom: 15px; font-weight: bold;">Smart Attendance</h4>
+                    <div id="tempQrBox" style="display:inline-block; margin: 10px 0;"></div>
+                    <h3 style="color: #1e293b; margin: 10px 0 5px 0; font-weight: bold;">${studentName}</h3>
+                    <p style="color: #64748b; font-weight: bold; margin-bottom: 5px;">ID: ${studentId}</p>
+                    <p style="color: #4f46e5; font-size: 12px; margin: 0; font-weight: 600;">Teacher: ${loggedInTeacherName}</p>
+                </div>`;
+            
+            let qrBox = document.getElementById("tempQrBox");
+            new QRCode(qrBox, { text: studentId, width: 140, height: 140 });
+
+            setTimeout(() => {
+                html2canvas(document.getElementById('tempCard'), {scale: 3}).then(canvas => {
+                    let link = document.createElement('a');
+                    link.download = studentId + '_ID.png';
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+                    container.innerHTML = "";
+                });
+            }, 300);
+        }
+
+        function teacherSaveStudent() {
+            let id = document.getElementById('tsId').value;
+            let name = document.getElementById('tsName').value;
+            let phone = document.getElementById('tsPhone').value;
+            let chatId = document.getElementById('tsChatId').value;
+
+            if(!id || !name) return alert("ID අංකය සහ නම අනිවාර්යයි!");
+
+            let btn = document.getElementById('tSaveStudentBtn');
+            btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Saving...";
+            
+            let iframe = document.getElementById('hiddenSubmissionFrame');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'hiddenSubmissionFrame';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+            }
+            iframe.src = API_URL + `?action=addStudent&teacher=${encodeURIComponent(loggedInTeacherName)}&studentId=${encodeURIComponent(id)}&studentName=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&chatId=${encodeURIComponent(chatId)}`;
+
+            setTimeout(() => {
+                document.getElementById('tStudentFormSection').style.display = 'none';
+                document.getElementById('tStudentQrSection').style.display = 'block';
+                btn.innerHTML = "Save & Generate QR";
+
+                document.getElementById('tIdCardName').innerText = name;
+                document.getElementById('tIdCardId').innerText = "ID: " + id;
+                document.getElementById('tIdCardTeacher').innerText = "Teacher: " + loggedInTeacherName;
+
+                let qrBox = document.getElementById("tQrcodeBox");
+                qrBox.innerHTML = ""; 
+                new QRCode(qrBox, { text: id, width: 140, height: 140 });
+
+                loadTeacherStats(); 
+            }, 1200);
+        }
+
+        function downloadTeacherQRCard() {
+            html2canvas(document.getElementById('tIdCardElement'), {scale: 3}).then(canvas => {
+                let link = document.createElement('a');
+                link.download = document.getElementById('tsId').value + '_ID.png';
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+
+        function resetTeacherStudentForm() {
+            document.getElementById('tsId').value = ""; document.getElementById('tsName').value = ""; document.getElementById('tsPhone').value = ""; document.getElementById('tsChatId').value = "";
+            document.getElementById('tStudentQrSection').style.display = 'none';
+            document.getElementById('tStudentFormSection').style.display = 'block';
+            loadTeacherStats();
+        }
+
+        function fetchTeacherReport() {
+            let date = document.getElementById('tReportDate').value;
+            if(!date) return alert("දිනයක් තෝරන්න!");
+
+            let tbody = document.getElementById('teacherReportTableBody');
+            tbody.innerHTML = `<tr><td colspan="4"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</td></tr>`;
+            document.getElementById('downloadPdfBtn').style.display = 'none';
+
+            fetch(API_URL + "?action=getTeacherReport&date=" + date + "&teacher=" + encodeURIComponent(loggedInTeacherName))
+            .then(res => res.json())
+            .then(data => {
+                currentReportData = data;
+                let html = "";
+                data.forEach(row => {
+                    html += `<tr>
+                        <td class="fw-bold">${row.studentId}</td>
+                        <td class="text-start">${row.studentName}</td>
+                        <td>${row.arrivalTime || '-'}</td>
+                        <td>${row.exitTime || '-'}</td>
+                    </tr>`;
+                });
+                if(data.length === 0) {
+                    html = `<tr><td colspan="4" class="text-muted py-3">මෙම දිනයට වාර්තා නොමැත.</td></tr>`;
+                } else {
+                    document.getElementById('downloadPdfBtn').style.display = 'block';
+                }
+                tbody.innerHTML = html;
+            });
+        }
+
+        function downloadReportPDF() {
+            const { jsPDF } = window.jspdf;
+            let doc = new jsPDF();
+            let date = document.getElementById('tReportDate').value;
+
+            doc.setFillColor(30, 41, 59); 
+            doc.rect(0, 0, 210, 40, "F");
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(22);
+            doc.setFont("helvetica", "bold");
+            doc.text("Attendance Report", 14, 22);
+            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(148, 163, 184);
+            doc.text("Powered by Novex Technology", 14, 30);
+
+            doc.setFontSize(10);
+            doc.setTextColor(255, 255, 255);
+            doc.text("Teacher: " + loggedInTeacherName, 196, 20, { align: "right" });
+            doc.text("Date: " + date, 196, 28, { align: "right" });
+
+            let startY = 50;
+            doc.setFillColor(79, 70, 229); 
+            doc.rect(14, startY, 182, 10, "F");
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "bold");
+            doc.text("Student ID", 20, startY + 7);
+            doc.text("Student Name", 70, startY + 7);
+            doc.text("Arrival Time", 125, startY + 7);
+            doc.text("Exit Time", 165, startY + 7);
+
+            startY += 10;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            let rowHeight = 10;
+
+            currentReportData.forEach((row, index) => {
+                if (startY > 270) {
+                    doc.addPage();
+                    startY = 20;
+                }
+                if (index % 2 === 0) {
+                    doc.setFillColor(248, 250, 252);
+                    doc.rect(14, startY, 182, rowHeight, "F");
+                }
+                
+                doc.setTextColor(51, 65, 85);
+                doc.text(String(row.studentId), 20, startY + 7);
+                doc.text(String(row.studentName), 70, startY + 7);
+                doc.text(String(row.arrivalTime || '-'), 125, startY + 7);
+                doc.text(String(row.exitTime || '-'), 165, startY + 7);
+                
+                startY += rowHeight;
+            });
+
+            doc.setFontSize(9);
+            doc.setTextColor(148, 163, 184);
+            doc.text("Official Report generated by Novex Technology Attendance System", 14, 285);
+
+            doc.save("Attendance_Report_" + date + ".pdf");
+        }
+
+        function manualEntry() {
+            let idValue = document.getElementById('manualIdInput').value.trim();
+            if(idValue !== "") { 
+                processAttendance(idValue); 
+                document.getElementById('manualIdInput').value = ""; 
+            } else { 
+                alert("ID අංකය ඇතුළත් කරන්න!"); 
+            }
+        }
+
+        function startScanner() {
+            document.getElementById('scanButtonContainer').style.display = 'none';
+            document.getElementById('scannerContainer').style.display = 'block';
+            html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        }
+
+        function stopScanner() {
+            if (html5QrcodeScanner) { html5QrcodeScanner.clear(); }
+            document.getElementById('scannerContainer').style.display = 'none';
+            document.getElementById('scanButtonContainer').style.display = 'block';
+        }
+
+        function onScanSuccess(decodedText, decodedResult) { 
+            stopScanner(); 
+            processAttendance(decodedText); 
+        }
+        function onScanFailure(error) {}
+
+        function processAttendance(studentId) {
+            let mode = document.querySelector('input[name="scanMode"]:checked').value;
+            let actionName = mode === 'exit' ? 'exit' : 'arrival';
+            let actionTypeLabel = mode === 'exit' ? 'පිටවීම' : 'පැමිණීම';
+
+            let currentTime = new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Colombo' });
+            let statusText = mode === 'exit' ? 'පිටවුණා (Exit)' : 'පැමිණියා (Arrival)';
+            let badgeBg = mode === 'exit' ? 'bg-danger' : 'bg-success';
+
+            fetch(API_URL + `?action=${actionName}&studentId=${encodeURIComponent(studentId)}`)
+            .then(res => res.text())
+            .then(response => {
+                if (response.trim() === "Today Scan") {
+                    document.getElementById('duplicateMsg').innerText = `අද දින මෙම ID අංකය (${studentId}) සඳහා ${actionTypeLabel} දැනටමත් සටහන් කර ඇත!`;
+                    new bootstrap.Modal(document.getElementById('duplicateAlertModal')).show();
+                } else if (response.trim() === "Not Arrived") {
+                    alert("⚠️ මෙම ශිෂ්‍යයා අද දින තවම පන්තියට පැමිණ නැත (Arrival සටහන් කර නැත)!");
+                } else {
+                    let audio = new Audio('https://www.soundjay.com/buttons/sounds/button-3.mp3');
+                    audio.play().catch(e => {});
+
+                    let newStudentHTML = `
+                        <div class="list-group-item d-flex justify-content-between align-items-center p-3" style="background-color: #f8fff9;">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3"><i class="fa-solid fa-check text-success"></i></div>
+                                <div><h6 class="m-0 fw-bold">ID: ${studentId}</h6><small class="text-success fw-bold">පැමිණීම සාර්ථකව සටහන් විය & Telegram Alert යවන ලදී</small></div>
+                            </div>
+                            <div class="text-end"><span class="badge ${badgeBg} rounded-pill mb-1">${statusText}</span><br><small class="text-muted fw-bold">${currentTime}</small></div>
+                        </div>`;
+                    document.getElementById('scannedList').insertAdjacentHTML('afterbegin', newStudentHTML);
+                    loadTeacherStats();
+                }
+            })
+            .catch(err => {
+                console.error("Error:", err);
+            });
+        }
+
+        document.getElementById('teacherPassword').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') doLogin();
+        });
+        document.getElementById('teacherUsername').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') doLogin();
+        });
+        document.getElementById('manualIdInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') manualEntry();
+        });
+    </script>
 </body>
-</html>
+</html> 
