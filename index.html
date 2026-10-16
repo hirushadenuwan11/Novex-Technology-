@@ -335,15 +335,14 @@
                             <label class="form-label fw-bold small">දෙමව්පියාගේ Telegram Chat ID එක</label>
                             <input type="text" id="tsChatId" class="form-control" placeholder="උදා: 123456789">
                         </div>
-                        <button type="button" id="tSaveStudentBtn" class="btn btn-primary w-100 fw-bold mt-3 py-3 rounded-3" onclick="teacherSaveStudent()"><i class="fa-solid fa-save me-2"></i> Save & Generate QR</button>
+                        <button type="button" id="tSaveStudentBtn" class="btn btn-primary w-100 fw-bold mt-3 py-3 rounded-3" onclick="teacherSaveStudent()"><i class="fa-solid fa-save me-2"></i> ලියාපදිංචි කරන්න (Save)</button>
                     </div>
 
-                    <div id="tStudentQrSection" style="display:none;" class="text-center">
-                        <div class="alert alert-success text-center py-2 mb-3 fw-bold small rounded-3">සාර්ථකව ලියාපදිංචි විය!</div>
-                        <div class="id-card-wrapper mb-3 text-center p-3" id="tIdCardElement">
-                            <div class="qr-container" id="tQrcodeBox"></div>
-                        </div>
-                        <button class="btn btn-success w-100 fw-bold py-2 rounded-3 shadow-sm" onclick="downloadTeacherQRCard()"><i class="fa-solid fa-download me-2"></i> Download QR Code (.png)</button>
+                    <div id="tStudentQrSection" style="display:none;" class="text-center py-4">
+                        <div class="mb-3 text-success"><i class="fa-solid fa-circle-check fa-4x"></i></div>
+                        <h4 class="fw-bold text-dark mb-2">සාර්ථකව ලියාපදිංචි කරන ලදී!</h4>
+                        <p class="text-muted small mb-4">මෙම ශිෂ්‍යයාගේ QR කෝඩ් එක ලබාගැනීමට <strong>"ළමයි ලැයිස්තුව" (Students List)</strong> වෙත පිවිසෙන්න.</p>
+                        <button class="btn btn-outline-primary w-100 fw-bold py-2 rounded-3" onclick="resetTeacherStudentForm()"><i class="fa-solid fa-user-plus me-2"></i> තවත් ශිෂ්‍යයෙක් එකතු කරන්න</button>
                     </div>
                 </div>
             </div>
@@ -359,6 +358,14 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
+                    <!-- Search Bar -->
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-search text-muted"></i></span>
+                            <input type="text" id="studentSearchInput" class="form-control bg-light border-start-0" placeholder="ID අංකය හෝ නම සඳහන් කර සොයන්න..." onkeyup="filterStudentTable()">
+                        </div>
+                    </div>
+
                     <div class="table-responsive" style="max-height: 450px; overflow-y: auto;">
                         <table class="table table-bordered table-striped text-center align-middle m-0">
                             <thead class="table-dark sticky-top">
@@ -463,24 +470,37 @@
                 loginBtn.innerHTML = "ඇතුල් වන්න (Login)";
                 
                 if(data.status === "success") {
+                    let expDateStr = data.expireDate;
+                    let slTodayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Colombo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+                    
+                    // Expired හෝ Deactive නම් ලොගින් වීම වැළැක්වීම
+                    if (data.isActive === false || data.expired === true || (expDateStr && new Date(expDateStr) < new Date(slTodayStr))) {
+                        errBox.innerText = "ගිණුමේ කාලය අවසන් වී ඇත, කරුණාකර පරිපාලක අමතන්න";
+                        errBox.style.display = "block";
+                        return;
+                    }
+
                     loggedInTeacherName = data.teacherName;
                     document.getElementById('loginPage').style.display = 'none';
                     document.getElementById('dashboardPage').style.display = 'block';
                     document.getElementById('welcomeText').innerText = "ආයුබෝවන්, " + loggedInTeacherName + "!";
                     
-                    let expDateStr = data.expireDate;
-                    let slTodayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Colombo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
                     let diffDays = Math.ceil((new Date(expDateStr) - new Date(slTodayStr)) / (1000 * 60 * 60 * 24));
 
-                    let badgeClass = diffDays > 5 ? "expiry-normal" : (diffDays > 0 ? "expiry-warning" : "expiry-danger");
-                    let badgeText = diffDays > 5 ? `ගිණුම ක්‍රියාත්මකයයි (තව දින ${diffDays} ක් ඉතිරියි)` : (diffDays > 0 ? `⚠️ ගිණුම කල් ඉකුත් වීමට ඇත්තේ දින ${diffDays} කි!` : `❌ ගිණුමේ කාලය අවසන් වී ඇත!`);
+                    let badgeClass = diffDays > 5 ? "expiry-normal" : "expiry-warning";
+                    let badgeText = `ගිණුම ක්‍රියාත්මකයයි (තව දින ${diffDays} ක් ඉතිරියි)`;
 
                     document.getElementById('expiryInfoBox').innerHTML = `<span class="expiry-badge ${badgeClass}">${badgeText}</span>`;
                     
                     loadAnnouncements();
                     loadTeacherStats(); 
                 } else {
-                    errBox.innerText = data.message; 
+                    let msg = data.message || "";
+                    if (msg.toLowerCase().includes("expire") || msg.toLowerCase().includes("deactive") || msg.toLowerCase().includes("inactive") || msg.toLowerCase().includes("error")) {
+                        errBox.innerText = "ගිණුමේ කාලය අවසන් වී ඇත, කරුණාකර පරිපාලක අමතන්න";
+                    } else {
+                        errBox.innerText = msg || "ගිණුමේ කාලය අවසන් වී ඇත, කරුණාකර පරිපාලක අමතන්න";
+                    }
                     errBox.style.display = "block";
                 }
             })
@@ -539,13 +559,36 @@
                         <td>
                             <button class="btn btn-sm btn-outline-primary fw-bold me-1 px-3" onclick="openEditModal('${s.id}')"><i class="fa-solid fa-pen-to-square me-1"></i> Edit</button>
                             <button class="btn btn-sm btn-outline-danger fw-bold me-1 px-3" onclick="deleteStudent('${s.id}')"><i class="fa-solid fa-trash me-1"></i> Delete</button>
-                            <button class="btn btn-sm btn-outline-success fw-bold px-3" onclick="downloadStudentQR('${s.id}')"><i class="fa-solid fa-qrcode me-1"></i> QR</button>
+                            <button class="btn btn-sm btn-outline-success fw-bold px-3" onclick="downloadStudentQR('${s.id}', '${s.name}')"><i class="fa-solid fa-qrcode me-1"></i> QR</button>
                         </td>
                     </tr>`;
                 });
                 if(data.studentsList.length === 0) html = `<tr><td colspan="5" class="text-muted py-3">ලියාපදිංචි සිසුන් නොමැත.</td></tr>`;
                 tbody.innerHTML = html;
             });
+        }
+
+        // Search Filter Function
+        function filterStudentTable() {
+            let input = document.getElementById('studentSearchInput').value.toLowerCase();
+            let tbody = document.getElementById('teacherStudentsTableBody');
+            let rows = tbody.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                let idCell = rows[i].getElementsByTagName('td')[0];
+                let nameCell = rows[i].getElementsByTagName('td')[1];
+
+                if (idCell && nameCell) {
+                    let idText = idCell.textContent || idCell.innerText;
+                    let nameText = nameCell.textContent || nameCell.innerText;
+
+                    if (idText.toLowerCase().indexOf(input) > -1 || nameText.toLowerCase().indexOf(input) > -1) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
         }
 
         function openEditModal(studentId) {
@@ -601,35 +644,35 @@
             }
         }
 
-        // ටෙම්ප්ලේට් නැතුව සෘජුවම සාමාන්‍ය QR කෝඩ් එක පමණක් ඩවුන්ලෝඩ් වීම
-        function downloadStudentQR(studentId) {
+        function downloadStudentQR(studentId, studentName) {
             let container = document.getElementById('hiddenQrContainer');
             container.style.display = "block";
             container.style.position = "fixed";
             container.style.top = "-9999px";
 
-            container.innerHTML = `<div id="tempOnlyQr" style="background: white; padding: 20px; display: inline-block;"></div>`;
+            container.innerHTML = `
+                <div id="tempCard" style="background: white; padding: 25px; border: 2px solid #4f46e5; border-radius: 20px; width: 280px; text-align: center;">
+                    <h4 style="color: #4f46e5; margin-bottom: 15px; font-weight: bold;">Smart Attendance</h4>
+                    <div id="tempQrBox" style="display:inline-block; margin: 10px 0;"></div>
+                    <h3 style="color: #1e293b; margin: 10px 0 5px 0; font-weight: bold;">${studentName}</h3>
+                    <p style="color: #64748b; font-weight: bold; margin-bottom: 5px;">ID: ${studentId}</p>
+                    <p style="color: #4f46e5; font-size: 12px; margin: 0; font-weight: 600;">Teacher: ${loggedInTeacherName}</p>
+                </div>`;
             
-            let qrBox = document.getElementById("tempOnlyQr");
+            let qrBox = document.getElementById("tempQrBox");
             qrBox.innerHTML = ""; 
-            
-            new QRCode(qrBox, { text: studentId, width: 200, height: 200, colorDark: "#0f172a", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
+            new QRCode(qrBox, { text: studentId, width: 140, height: 140 });
 
             setTimeout(() => {
-                let canvas = qrBox.querySelector("canvas");
-                if (canvas) {
+                html2canvas(document.getElementById('tempCard'), {scale: 3, useCORS: true, allowTaint: true}).then(canvas => {
                     let link = document.createElement('a');
-                    link.download = studentId + '_QR.png';
+                    link.download = studentId + '_ID.png';
                     link.href = canvas.toDataURL("image/png");
                     link.click();
                     container.innerHTML = "";
                     container.style.display = "none";
-                } else {
-                    alert("ඩවුන්ලෝඩ් කිරීමේදී දෝෂයක් ඇති විය.");
-                    container.innerHTML = "";
-                    container.style.display = "none";
-                }
-            }, 500);
+                });
+            }, 800);
         }
 
         function teacherSaveStudent() {
@@ -655,29 +698,10 @@
             setTimeout(() => {
                 document.getElementById('tStudentFormSection').style.display = 'none';
                 document.getElementById('tStudentQrSection').style.display = 'block';
-                btn.innerHTML = "Save & Generate QR";
-
-                let qrBox = document.getElementById("tQrcodeBox");
-                qrBox.innerHTML = ""; 
-                new QRCode(qrBox, { text: id, width: 150, height: 150, colorDark: "#0f172a", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
+                btn.innerHTML = "ලියාපදිංචි කරන්න (Save)";
 
                 loadTeacherStats(); 
             }, 1200);
-        }
-
-        function downloadTeacherQRCard() {
-            let qrBox = document.getElementById("tQrcodeBox");
-            setTimeout(() => {
-                let canvas = qrBox.querySelector("canvas");
-                if (canvas) {
-                    let link = document.createElement('a');
-                    link.download = document.getElementById('tsId').value + '_QR.png';
-                    link.href = canvas.toDataURL("image/png");
-                    link.click();
-                } else {
-                    alert("QR කෝඩ් එක බාගත කරගත නොහැකි විය.");
-                }
-            }, 500);
         }
 
         function resetTeacherStudentForm() {
@@ -824,10 +848,11 @@
             fetch(API_URL + `?action=${actionName}&studentId=${encodeURIComponent(studentId)}`)
             .then(res => res.text())
             .then(response => {
-                if (response.trim() === "TodayScan") {
+                let resText = response.trim();
+                if (resText === "Today Scan" || resText === "TodayScan") {
                     document.getElementById('duplicateMsg').innerText = `අද දින මෙම ID අංකය (${studentId}) සඳහා ${actionTypeLabel} දැනටමත් සටහන් කර ඇත!`;
                     new bootstrap.Modal(document.getElementById('duplicateAlertModal')).show();
-                } else if (response.trim() === "Not Arrived") {
+                } else if (resText === "Not Arrived") {
                     alert("⚠️ මෙම ශිෂ්‍යයා අද දින තවම පන්තියට පැමිණ නැත (Arrival සටහන් කර නැත)!");
                 } else {
                     let audio = new Audio('https://www.soundjay.com/buttons/sounds/button-3.mp3');
