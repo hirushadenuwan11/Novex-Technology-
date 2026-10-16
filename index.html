@@ -174,9 +174,9 @@
         .expiry-warning { background-color: #fef3c7; color: #92400e; }
         .expiry-danger { background-color: #fee2e2; color: #991b1b; }
 
-        .id-card-wrapper { background: linear-gradient(135deg, #fff 0%, #f8fafc 100%); border: 2px solid #cbd5e1; border-radius: 20px; width: 280px; margin: 0 auto; text-align: center; overflow: hidden; padding-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
-        .id-card-header { background: linear-gradient(135deg, #1e1b4b, #4338ca); color: white; padding: 18px; font-weight: 700; font-size: 1.1rem; border-bottom-left-radius: 50% 15px; border-bottom-right-radius: 50% 15px; }
-        .qr-container { background: white; padding: 12px; border-radius: 12px; display: inline-block; margin: 15px 0; border: 1px solid #e2e8f0; }
+        .id-card-wrapper { background: linear-gradient(135deg, #fff 0%, #f8fafc 100%); border: 3px solid #4f46e5; border-radius: 24px; width: 280px; margin: 0 auto; text-align: center; overflow: hidden; padding-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .id-card-header { background: linear-gradient(135deg, #1e1b4b, #4338ca); color: white; padding: 18px; font-weight: 700; font-size: 1.1rem; border-bottom-left-radius: 50% 15px; border-bottom-right-radius: 50% 15px; margin-bottom: 15px; }
+        .qr-container { background: white; padding: 10px; border-radius: 12px; display: inline-block; border: 2px solid #e2e8f0; }
 
         .announcement-box { background: #e0e7ff; border-left: 6px solid var(--primary); padding: 20px; border-radius: 16px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.05); }
         
@@ -605,31 +605,51 @@
             }
         }
 
-        function downloadStudentQR(studentId, studentName) {
+      
+      function downloadStudentQR(studentId, studentName) {
             let container = document.getElementById('hiddenQrContainer');
-            container.innerHTML = `
-                <div id="tempCard" style="background: white; padding: 25px; border: 2px solid #4f46e5; border-radius: 20px; width: 280px; text-align: center;">
-                    <h4 style="color: #4f46e5; margin-bottom: 15px; font-weight: bold;">Smart Attendance</h4>
-                    <div id="tempQrBox" style="display:inline-block; margin: 10px 0;"></div>
-                    <h3 style="color: #1e293b; margin: 10px 0 5px 0; font-weight: bold;">${studentName}</h3>
-                    <p style="color: #64748b; font-weight: bold; margin-bottom: 5px;">ID: ${studentId}</p>
-                    <p style="color: #4f46e5; font-size: 12px; margin: 0; font-weight: 600;">Teacher: ${loggedInTeacherName}</p>
-                </div>`;
-            
-            let qrBox = document.getElementById("tempQrBox");
-            new QRCode(qrBox, { text: studentId, width: 140, height: 140 });
+            container.style.display = "block";
+            container.style.position = "fixed";
+            container.style.top = "-9999px";
 
-            setTimeout(() => {
-                html2canvas(document.getElementById('tempCard'), {scale: 3}).then(canvas => {
-                    let link = document.createElement('a');
-                    link.download = studentId + '_ID.png';
-                    link.href = canvas.toDataURL("image/png");
-                    link.click();
-                    container.innerHTML = "";
-                });
-            }, 300);
+            // Google Chart API මඟින් සෘජුවම 100% විශ්වාසදායක QR රූපයක් ලබා ගැනීම
+            let directQrUrl = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=` + encodeURIComponent(studentId);
+
+            container.innerHTML = `
+                <div id="tempCard" style="background: linear-gradient(135deg, #fff 0%, #f8fafc 100%); border: 3px solid #4f46e5; border-radius: 24px; width: 280px; text-align: center; overflow: hidden; padding-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                    <div style="background: linear-gradient(135deg, #1e1b4b, #4338ca); color: white; padding: 18px; font-weight: 700; font-size: 1.1rem; border-bottom-left-radius: 50% 15px; border-bottom-right-radius: 50% 15px; margin-bottom: 15px;">
+                        <i class="fa-solid fa-qrcode"></i> Smart Attendance
+                    </div>
+                    <div style="background: white; padding: 10px; border-radius: 12px; display: inline-block; border: 2px solid #e2e8f0;">
+                        <img id="safeQrImage" src="${directQrUrl}" width="130" height="130" crossorigin="anonymous" style="display:block; margin:0 auto;">
+                    </div>
+                    <div style="font-size: 1.25rem; color: #1e293b; font-weight: bold; margin: 12px 0 4px 0;">${studentName}</div>
+                    <div style="color: #64748b; font-weight: bold; font-size: 0.9rem; margin-bottom: 6px;">ID: ${studentId}</div>
+                    <div style="color: #4f46e5; font-size: 12px; font-weight: 600; background: #e0e7ff; padding: 3px 10px; border-radius: 50px; display: inline-block;">Teacher: ${loggedInTeacherName}</div>
+                </div>`;
+
+            let imgElement = document.getElementById('safeQrImage');
+            
+            // රූපය සම්පූර්ණයෙන්ම බ්‍රව්සරයට Load වී අවසන් වූ පසු පමණක් html2canvas ක්‍රියාත්මක කිරීම
+            imgElement.onload = function() {
+                setTimeout(() => {
+                    html2canvas(document.getElementById('tempCard'), { scale: 3, useCORS: true, allowTaint: true }).then(canvas => {
+                        let link = document.createElement('a');
+                        link.download = studentId + '_ID.png';
+                        link.href = canvas.toDataURL("image/png");
+                        link.click();
+                        container.innerHTML = "";
+                        container.style.display = "none";
+                    }).catch(err => {
+                        alert("ඩවුන්ලෝඩ් කිරීමේදී දෝෂයක් ඇති විය.");
+                        container.innerHTML = "";
+                        container.style.display = "none";
+                    });
+                }, 800);
+            };
         }
 
+        // 2. නව ශිෂ්‍යයෙක් ලියාපදිංචි කිරීමේදී
         function teacherSaveStudent() {
             let id = document.getElementById('tsId').value;
             let name = document.getElementById('tsName').value;
@@ -660,20 +680,22 @@
                 document.getElementById('tIdCardTeacher').innerText = "Teacher: " + loggedInTeacherName;
 
                 let qrBox = document.getElementById("tQrcodeBox");
-                qrBox.innerHTML = ""; 
-                new QRCode(qrBox, { text: id, width: 140, height: 140 });
+                let qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(id)}`;
+                qrBox.innerHTML = `<img src="${qrImageUrl}" width="130" height="130" crossorigin="anonymous" style="display:block; margin:0 auto;">`;
 
                 loadTeacherStats(); 
             }, 1200);
         }
 
         function downloadTeacherQRCard() {
-            html2canvas(document.getElementById('tIdCardElement'), {scale: 3}).then(canvas => {
-                let link = document.createElement('a');
-                link.download = document.getElementById('tsId').value + '_ID.png';
-                link.href = canvas.toDataURL("image/png");
-                link.click();
-            });
+            setTimeout(() => {
+                html2canvas(document.getElementById('tIdCardElement'), { scale: 3, useCORS: true, allowTaint: true }).then(canvas => {
+                    let link = document.createElement('a');
+                    link.download = document.getElementById('tsId').value + '_ID.png';
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+                });
+            }, 500);
         }
 
         function resetTeacherStudentForm() {
@@ -820,7 +842,7 @@
             fetch(API_URL + `?action=${actionName}&studentId=${encodeURIComponent(studentId)}`)
             .then(res => res.text())
             .then(response => {
-                if (response.trim() === "Today Scan") {
+                if (response.trim() === "TodayScan") {
                     document.getElementById('duplicateMsg').innerText = `අද දින මෙම ID අංකය (${studentId}) සඳහා ${actionTypeLabel} දැනටමත් සටහන් කර ඇත!`;
                     new bootstrap.Modal(document.getElementById('duplicateAlertModal')).show();
                 } else if (response.trim() === "Not Arrived") {
