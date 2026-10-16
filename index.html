@@ -612,41 +612,39 @@
             container.style.position = "fixed";
             container.style.top = "-9999px";
 
-            // Google Chart API මඟින් සෘජුවම 100% විශ්වාසදායක QR රූපයක් ලබා ගැනීම
-            let directQrUrl = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=` + encodeURIComponent(studentId);
-
+            // Local qrcodejs භාවිත කර කිසිදු බාහිර ලින්ක් දෝෂයකින් තොරව ID කාඩ් එක සැකසීම
             container.innerHTML = `
                 <div id="tempCard" style="background: linear-gradient(135deg, #fff 0%, #f8fafc 100%); border: 3px solid #4f46e5; border-radius: 24px; width: 280px; text-align: center; overflow: hidden; padding-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
                     <div style="background: linear-gradient(135deg, #1e1b4b, #4338ca); color: white; padding: 18px; font-weight: 700; font-size: 1.1rem; border-bottom-left-radius: 50% 15px; border-bottom-right-radius: 50% 15px; margin-bottom: 15px;">
                         <i class="fa-solid fa-qrcode"></i> Smart Attendance
                     </div>
-                    <div style="background: white; padding: 10px; border-radius: 12px; display: inline-block; border: 2px solid #e2e8f0;">
-                        <img id="safeQrImage" src="${directQrUrl}" width="130" height="130" crossorigin="anonymous" style="display:block; margin:0 auto;">
-                    </div>
+                    <div id="dlTempQrBox" style="background: white; padding: 10px; border-radius: 12px; display: inline-block; border: 2px solid #e2e8f0;"></div>
                     <div style="font-size: 1.25rem; color: #1e293b; font-weight: bold; margin: 12px 0 4px 0;">${studentName}</div>
                     <div style="color: #64748b; font-weight: bold; font-size: 0.9rem; margin-bottom: 6px;">ID: ${studentId}</div>
                     <div style="color: #4f46e5; font-size: 12px; font-weight: 600; background: #e0e7ff; padding: 3px 10px; border-radius: 50px; display: inline-block;">Teacher: ${loggedInTeacherName}</div>
                 </div>`;
 
-            let imgElement = document.getElementById('safeQrImage');
+            let qrBox = document.getElementById("dlTempQrBox");
+            qrBox.innerHTML = ""; 
             
-            // රූපය සම්පූර්ණයෙන්ම බ්‍රව්සරයට Load වී අවසන් වූ පසු පමණක් html2canvas ක්‍රියාත්මක කිරීම
-            imgElement.onload = function() {
-                setTimeout(() => {
-                    html2canvas(document.getElementById('tempCard'), { scale: 3, useCORS: true, allowTaint: true }).then(canvas => {
-                        let link = document.createElement('a');
-                        link.download = studentId + '_ID.png';
-                        link.href = canvas.toDataURL("image/png");
-                        link.click();
-                        container.innerHTML = "";
-                        container.style.display = "none";
-                    }).catch(err => {
-                        alert("ඩවුන්ලෝඩ් කිරීමේදී දෝෂයක් ඇති විය.");
-                        container.innerHTML = "";
-                        container.style.display = "none";
-                    });
-                }, 800);
-            };
+            // qrcode.min.js මඟින් සෘජුවම Canvas එකක් ජනනය කිරීම (Local হওয়ায় CORS ප්‍රශ්න මතු නොවේ)
+            new QRCode(qrBox, { text: studentId, width: 130, height: 130, colorDark: "#0f172a", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
+
+            // කෑන්වස් එක නිවැරදිව රෙන්ඩර් වීමට තත්පර 1ක ප්‍රමාදයක් ලබා දීම
+            setTimeout(() => {
+                html2canvas(document.getElementById('tempCard'), { scale: 3, useCORS: true, allowTaint: true }).then(canvas => {
+                    let link = document.createElement('a');
+                    link.download = studentId + '_ID.png';
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+                    container.innerHTML = "";
+                    container.style.display = "none";
+                }).catch(err => {
+                    alert("ඩවුන්ලෝඩ් කිරීමේදී දෝෂයක් ඇති විය.");
+                    container.innerHTML = "";
+                    container.style.display = "none";
+                });
+            }, 1000);
         }
 
         // 2. නව ශිෂ්‍යයෙක් ලියාපදිංචි කිරීමේදී
